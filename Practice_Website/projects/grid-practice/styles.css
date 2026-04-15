@@ -1,0 +1,153 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Roboto, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: rgb(241, 241, 241);
+}
+
+#header {
+  width: 100%;
+  display: flex;
+  align-items:center;
+  justify-content: space-between;
+  padding: 20px 30px;
+  height: 80px;
+  position: fixed;
+  top: 0;
+  background-color: #1a1a1a;
+}
+
+#header #header-img {
+  width: 4rem;
+}
+
+#header #nav-bar a {
+  text-decoration: none;
+  color: orange;
+  font-size: 1.3rem;
+  margin-left: 2rem;
+}
+
+#header #nav-bar a:hover {
+  text-decoration: underline;
+}
+
+main {
+  display: grid;
+  grid-template-columns: 1fr minmax(480px, 80%) 1fr;
+  padding-top: 5rem;
+}
+
+#title {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+#title h1 {
+  color: darkorange
+}
+
+section {
+  margin-bottom: 10rem;
+  line-height: 1.5;
+  scroll-margin-top: 80px;
+}
+
+h2 {
+  color: darkorange;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+}
+
+#form-container {
+  grid-column: 2 / 3;
+}
+
+#form-container #form {
+  margin: 0 auto;
+  width: 80%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: orange;
+  padding: 20px;
+  border-radius: 5%;
+}
+
+#form-container #form label {
+  color: black;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+#form-container #form #email {
+  margin: 10px;
+  font-size: 1.2rem;
+}
+
+#form-container #form #submit {
+  margin: 10px;
+  font-size: 1.2rem;
+  padding: 6px;
+  border-radius: 10%;
+  background-color: #1a1a1a;
+  color: darkorange;
+}
+
+#form-container #form #submit:hover {
+  background-color: orange;
+  color: black;
+  cursor: pointer;
+}
+
+#about {
+  grid-column: 2 / 3;
+}
+
+#tutorial {
+  grid-column: 2 / 3;
+}
+
+#tutorial iframe {
+  width: 100%;
+  max-width: 560px;
+}
+
+#basics {
+  grid-column: 2 / 3;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 1rem;
+}
+
+#basics h2 {
+  grid-column: 1 / -1;
+}
+
+#basics pre {
+  background-color: #1a1a1a;
+  color: darkorange;
+  width: auto;
+}
+
+@media only screen and (max-width: 768px) {
+  #basics {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  #basics {
+    grid-template-columns: 1fr;
+  }
+}

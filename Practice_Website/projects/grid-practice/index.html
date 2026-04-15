@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Product Landing Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+  </head>
+
+<body>
+  <header id="header">
+    <img id="header-img" src="https://img.icons8.com/?size=100&id=HOQ6VKYLQozi&format=png&color=000000" alt="website logo">
+    <nav id="nav-bar">
+      <a href="#about" class="nav-link">About</a>
+      <a href="#tutorial" class="nav-link">Tutorial</a>
+      <a href="#basics" class="nav-link">Basics</a>
+    </nav>
+  </header>
+  <main>
+    <div id="title">
+      <h1>What is HTML</h1>
+      <p>Author: Jemmel</p>
+    </div>
+
+    <section id="form-container">
+      <form id="form" action="https://www.freecodecamp.org/email-submit">
+        <label for="email">Join our monthly subcripction of HTML news!</label>
+        <input type="email" id="email" name="email" placeholder="sample@email.com" required>
+        <input type="submit" id="submit">
+      </form>
+    </section>
+
+    <section id="about">
+      <h2>About</h2>
+      <h3>HTML: HyperText Markup Language</h3>
+      <p>HTML (HyperText Markup Language) is the most basic building block of the Web. It defines the meaning and structure of web content. Other technologies besides HTML are generally used to describe a web page's appearance/presentation (CSS) or functionality/behavior (JavaScript).</p>
+      <p>"Hypertext" refers to links that connect web pages to one another, either within a single website or between websites. Links are a fundamental aspect of the Web. By uploading content to the Internet and linking it to pages created by other people, you become an active participant in the World Wide Web.</p>
+    </section>
+
+    <section id="tutorial">
+      <h2>Tutorial</h2>
+      <iframe id="video" 
+        width="560" 
+        height="315" 
+        src="https://www.youtube.com/embed/vY2xUc4TVmY?si=WpmHaVkw3CZ9k1hE" 
+        title="YouTube video player" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+        referrerpolicy="strict-origin-when-cross-origin" 
+        allowfullscreen>
+      </iframe>
+    </section>
+
+    <section id="basics">
+      <h2>Basics</h2>
+      <div class="basics-sample">
+        <h3>A Simple HTML Document</h3>
+        <pre>
+          <code>
+        &lt;!DOCTYPE html&gt;
+        &lt;html&gt;
+        &lt;head&gt;
+        &lt;title&gt;Page Title&lt;/title&gt;
+        &lt;/head&gt;
+        &lt;body&gt;
+
+        &lt;h1&gt;My First Heading&lt;/h1&gt;
+        &lt;p&gt;My first paragraph.&lt;/p&gt;
+
+        &lt;/body&gt;
+        &lt;/html&gt;
+          </code>
+        </pre>
+      </div>
+      <div class="basics-sample">
+        <h3>A Sample Head Section</h3>
+        <pre>
+          <code>
+        &lt;head&gt;
+            &lt;meta charset="UTF-8"&gt;
+            &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+            &lt;title&gt;Your Page Title&lt;/title&gt;
+        &lt;/head&gt;
+          </code>
+        </pre>
+      </div>
+      <div class="basics-sample">
+        <h3>A Simple Body Section</h3>
+        <pre>
+          <code>
+        &lt;!DOCTYPE html&gt;
+        &lt;html&gt;
+          &lt;head&gt;
+            &lt;title&gt;Page Title&lt;/title&gt;
+          &lt;/head&gt;
+          &lt;body&gt;
+            &lt;!-- Visible content goes here --&gt;
+            &lt;h1&gt;Welcome to My Website&lt;/h1&gt;
+            &lt;p&gt;This is a paragraph of text.&lt;/p&gt;
+          &lt;/body&gt;
+        &lt;/html&gt;
+          </code>
+      </pre>
+      </div>
+    </section>
+  </main>
+</body>
+
+</html>
