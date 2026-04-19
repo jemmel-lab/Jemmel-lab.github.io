@@ -115,7 +115,7 @@ section h2 {
     list-style: none;
     padding: 20px 30px;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 #skills-content ul li {
@@ -207,7 +207,7 @@ section h2 {
     padding: 15px;
     border-radius: 10px;
     line-height: 1.4;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 #experience-content article h3 {
