@@ -50,6 +50,8 @@ header {
     justify-content: space-between;
     align-items: center;
     position: fixed;
+    z-index: 1000;
+    border-bottom: solid 1px var(--color-bg);
 }
 
 header h1 {
@@ -93,14 +95,14 @@ section h2 {
     display:flex;
     align-items: center;
     justify-content: space-evenly;
-    text-align: center;
+    text-align: left;
     padding: 0 30px;
 }
 
 #about #about-content img {
     width: 15vw;
     min-width: 150px;
-    margin: 10px;
+    margin: 10px 20px 10px;
     box-shadow:0 0 3px 3px rgba(255, 255, 255, .2);
     border-radius: 50%;
 }
@@ -112,12 +114,19 @@ section h2 {
     column-gap: 20px;
     list-style: none;
     padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
 #skills-content ul li {
     display: flex;
     width: 100%;
     gap: 20px;
+}
+
+#skills-content ul li:hover {
+    transform: translateY(-5px);
+    transition: 0.3s ease;
 }
 
 #skills-content ul li i {
@@ -198,7 +207,7 @@ section h2 {
     padding: 15px;
     border-radius: 10px;
     line-height: 1.4;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
 #experience-content article h3 {
@@ -227,7 +236,7 @@ section h2 {
 /* Contact */
 
 #contact h3 {
-    font-size: 8rem;
+    font-size: 4rem;
     /* margin-bottom: -20px; */
 }
 
@@ -240,19 +249,26 @@ section h2 {
     margin-top: 20px;
 }
 
-#contact #contact-icons i {
+#contact #contact-icons a {
     font-size: 3rem;
     margin-right: 10px;
+    text-decoration: none;
+    color: var(--color-text);
+}
+
+#contact #contact-icons a:hover {
+    color: var(--color-primary);
 }
 
 /* Footer */
 
 footer {
     height: 50px;
-    background-color: black;
+    background-color: var(--color-bg-secondary);
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--color-text-muted);
 }
 
 /* media queries */
@@ -272,4 +288,12 @@ footer {
     #skills-content ul {
     grid-template-columns: 1fr;
     }
+    #contact h3 {
+        font-size: 3rem;
+        margin-bottom: -10px;
+    }
+    #contact > p {
+        font-size: 2rem;
+    }
+
 }
