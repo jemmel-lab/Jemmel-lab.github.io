@@ -233,6 +233,39 @@ section h2 {
     transition: 0.3s ease;
 }
 
+/* Project */
+
+#project-content a {
+    display: inline-block;
+    width: auto;
+    text-decoration: none;
+}
+
+.project-card {
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    background-color: var(--color-bg-secondary);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    text-align: center;
+    transition: all .3s ease;
+}
+
+.project-card:hover {
+    transform: scale(1.1);
+}
+
+.project-card img {
+    width: 100%;
+    object-fit: cover;
+}
+
+.project-card h3 {
+    color: var(--color-text);
+}
+
 /* Contact */
 
 #contact h3 {
@@ -269,6 +302,8 @@ footer {
     align-items: center;
     justify-content: center;
     color: var(--color-text-muted);
+    position: relative;
+    z-index: 1000;
 }
 
 /* media queries */
