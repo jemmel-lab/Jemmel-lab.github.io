@@ -86,7 +86,8 @@ section {
 }
 
 section h2 {
-    color: var(--color-secondary);
+    color: var(--color-primary);
+    font-size: 3.5rem;
 }
 
 /* About section */
@@ -96,13 +97,13 @@ section h2 {
     align-items: center;
     justify-content: space-evenly;
     text-align: left;
-    padding: 0 30px;
+    padding: 20px 30px;
 }
 
 #about #about-content img {
     width: 15vw;
     min-width: 150px;
-    margin: 10px 20px 10px;
+    margin: 10px 40px 10px;
     box-shadow:0 0 3px 3px rgba(255, 255, 255, .2);
     border-radius: 50%;
 }
@@ -242,9 +243,9 @@ section h2 {
 }
 
 .project-card {
+    position: relative;
     width: 200px;
     height: 200px;
-    overflow: hidden;
     background-color: var(--color-bg-secondary);
     padding: 10px;
     border-radius: 10px;
@@ -253,8 +254,32 @@ section h2 {
     transition: all .3s ease;
 }
 
+.project-card .project-description {
+    position: absolute;
+    z-index: 5;
+    width: 150%;
+    left: -25%;
+    border-radius: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all .5s ease;
+    padding: 5px;
+    font-size: 1.2rem;
+    color: var(--color-text-muted);
+    background-color: var(--color-bg-secondary);
+}
+
+.project-card:hover .project-description {
+    visibility: visible;
+    opacity: 1;
+}
+
 .project-card:hover {
     transform: scale(1.1);
+}
+
+.project-card:hover h3 {
+    color: var(--color-secondary);
 }
 
 .project-card img {
@@ -264,6 +289,7 @@ section h2 {
 
 .project-card h3 {
     color: var(--color-text);
+    transition: all .5s ease;
 }
 
 /* Contact */
