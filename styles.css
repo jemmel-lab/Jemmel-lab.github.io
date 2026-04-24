@@ -235,6 +235,13 @@ section h2 {
 }
 
 /* Project */
+#project-content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
 
 #project-content a {
     display: inline-block;
@@ -256,7 +263,7 @@ section h2 {
 
 .project-card .project-description {
     position: absolute;
-    z-index: 5;
+    z-index: 555;
     width: 150%;
     left: -25%;
     border-radius: 10px;
@@ -276,6 +283,7 @@ section h2 {
 
 .project-card:hover {
     transform: scale(1.1);
+    z-index: 999;
 }
 
 .project-card:hover h3 {
@@ -358,6 +366,10 @@ footer {
     }
     #contact > p {
         font-size: 2rem;
+    }
+    .project-card {
+        width: 150px;
+        height: 150px;
     }
 
 }
