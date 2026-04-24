@@ -133,6 +133,7 @@ section h2 {
 #skills-content ul li i {
     font-size: 4rem;
     padding: 10px;
+    color: var(--color-text);
 }
 
 #skills-content ul li:last-of-type i {
@@ -164,6 +165,11 @@ section h2 {
     border-radius: 5px;
     height: 100%;
     background-color: var(--color-primary);
+    transition: all .5s ease;
+}
+
+#skills-content ul li:hover .skill-content .skill-bar .progress {
+    background-color: var(--color-secondary);
 }
 
 #html > .progress {
@@ -240,6 +246,9 @@ section h2 {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-evenly;
+    max-height: calc(100vh - 80px);
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 
@@ -253,6 +262,7 @@ section h2 {
     position: relative;
     width: 200px;
     height: 200px;
+    margin: 10px;
     background-color: var(--color-bg-secondary);
     padding: 10px;
     border-radius: 10px;
