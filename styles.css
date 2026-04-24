@@ -126,7 +126,7 @@ section h2 {
 }
 
 #skills-content ul li:hover {
-    transform: translateY(-5px);
+    transform: scale(1.05);
     transition: 0.3s ease;
 }
 
@@ -378,8 +378,11 @@ footer {
         font-size: 2rem;
     }
     .project-card {
-        width: 150px;
-        height: 150px;
+        width: 100px;
+        height: 100px;
+    }
+    .project-card h3 {
+        font-size: 1rem;
     }
 
 }
