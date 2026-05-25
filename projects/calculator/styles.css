@@ -81,8 +81,16 @@ main {
     background-color: lightgray;
     border-radius: 10px 10px 0 0;
     margin-bottom: 10px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding: 0 20px;
+    overflow: hidden;
+}
+
+.screen span {
     color: var(--color-bg);
-    font-size: 2rem;
+    font-size: 3rem;
 }
 
 .button-container {

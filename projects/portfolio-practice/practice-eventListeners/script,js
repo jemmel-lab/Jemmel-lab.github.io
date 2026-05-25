@@ -1,0 +1,19 @@
+const images = document.querySelectorAll(".gallery-item");
+const lightbox = document.querySelector(".lightbox");
+const lightboxImg = document.getElementById("lightbox-image");
+const closeBtn = document.getElementById("close-btn");
+
+images.forEach(img => {
+  img.addEventListener("click", () => {
+    lightbox.style.display = "flex";
+    lightboxImg.src = img.src.slice(0, -14) + ".jpg";
+  })
+})
+
+closeBtn.addEventListener("click", () => {
+    lightbox.style.display = "none";
+});
+
+lightbox.addEventListener("click", () => {
+    lightbox.style.display = "none";
+})
