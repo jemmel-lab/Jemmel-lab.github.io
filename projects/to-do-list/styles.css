@@ -1,0 +1,125 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* border: 1px solid #fff; */
+}
+
+:root {
+  /* Backgrounds */
+  --color-bg: #0f172a;
+  --color-bg-secondary: #1e293b;
+
+  /* Text */
+  --color-text: #e2e8f0;
+  --color-text-muted: #94a3b8;
+
+  /* Accents */
+  --color-primary: #38bdf8;
+  --color-secondary: #22c55e;
+}
+
+html {
+    /* 62.5% of 16px default = 10px */
+    font-size: 62.5%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px; 
+}
+
+body {
+    /* Resets body text to a readable 16px (1.6 * 10px) */
+    font-size: 1.6rem; 
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 2rem;
+}
+
+header {
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text);
+    height: 8rem;
+    width: 100%;
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    z-index: 1000;
+    border-bottom: solid 1px var(--color-bg);
+}
+
+header h1 {
+    color: var(--color-primary);
+    margin: 0;
+}
+
+/* Main */
+
+main {
+    padding-top: 8rem;
+    height: calc(100vh - 50px);
+    display: flex;
+    align-items: center;
+    flex-flow: column;
+}
+
+#add-to-list-container {
+    background-color: var(--color-bg-secondary);
+    height: fit-content;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+#new-task-input {
+    font-size: 1.7rem;
+    padding: 3px 5px;
+    margin-right: 10px;
+}
+
+#add-task-btn {
+    font-size: 1.7rem;
+    padding: 3px 5px;
+    background-color: var(--color-secondary);
+    border: none;
+    border-radius: 5px;
+    color: #0f172a;
+}
+
+#add-task-btn:hover {
+    cursor: pointer;
+}
+
+.task-container {
+    background-color: var(--color-bg-secondary);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    width: 20vw;
+    min-width: 300px;
+}
+
+.task-list {
+    list-style-type: none;
+}
+
+/* Footer */
+
+footer {
+    height: 50px;
+    background-color: var(--color-bg-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+    position: relative;
+    z-index: 1000;
+}

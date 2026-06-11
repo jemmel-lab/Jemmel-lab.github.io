@@ -1,0 +1,47 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+  transition: background 0.3s, color 0.3s;
+}
+
+.theme-light {
+  background-color: white;
+  color: black;
+}
+.theme-dark {
+  background-color: rgb(35, 35, 35);
+  color: white;
+}
+.theme-eyesore {
+  background-color: red;
+  color: green;
+}
+
+button {
+  background-color: rgb(0, 226, 124);
+  padding: 10px;
+  border: 1px solid gray;
+  font-size: 1rem;
+}
+button:hover {
+  cursor: pointer;
+  background-color: rgb(0, 270, 140);
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style-type: none;
+  padding: 5px;
+}
+li:hover {
+  cursor: pointer;
+}
+
+#status {
+  text-align: center;
+  min-height: 20px;
+}

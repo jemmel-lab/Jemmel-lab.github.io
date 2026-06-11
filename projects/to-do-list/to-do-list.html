@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-do List</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>To-do List</h1>
+    </header>
+    <main>
+        <div id="add-to-list-container">
+            <h2>Add a new task</h2>
+            <form action="">
+                <input type="text" id="new-task-input" required>
+                <button id="add-task-btn" type="submit">Add</button>
+            </form>
+        </div>
+        <div id="tasks">
+            <div id="ongoing-task" class="task-container">
+                <ul class="task-list">
+                    <li id="task1">
+                        <input type="checkbox" class="checkbox" name="task1-checkbox" id="task1-checkbox">
+                        Task 1
+                    </li>
+                </ul>
+            </div>
+            <!-- TO-DO -->
+            <!-- <div id="completed-task" class="task-container">
+                
+            </div>
+            <div id="deleted-task" class="task-container">
+                
+            </div> -->
+        </div>
+    </main>
+    <footer>
+        <p>© 2026 Bench Jemmel</p>
+    </footer>
+    <script src="script.js" defer></script>
+</body>
+</html>
