@@ -6,17 +6,26 @@
 }
 
 :root {
-  /* Backgrounds */
-  --color-bg: #0f172a;
-  --color-bg-secondary: #1e293b;
+    /* Backgrounds */
+    --color-bg: #0f172a;
+    --color-bg-secondary: #1e293b;
 
-  /* Text */
-  --color-text: #e2e8f0;
-  --color-text-muted: #94a3b8;
+    /* Text */
+    --color-text: #e2e8f0;
+    --color-text-muted: #94a3b8;
 
-  /* Accents */
-  --color-primary: #38bdf8;
-  --color-secondary: #22c55e;
+    /* Accents */
+    --color-primary: #38bdf8;
+    --color-secondary: #22c55e;
+
+    /* Status */
+    --color-success: #22c55e;
+    --color-warning: #f59e0b;
+    --color-danger: #ef4444;
+    --color-info: #06b6d4;
+
+    /* Borders */
+    --color-border: #334155;
 }
 
 html {
@@ -85,17 +94,25 @@ main {
     margin-right: 10px;
 }
 
-#add-task-btn {
+#new-task-btn {
     font-size: 1.7rem;
+    font-weight: bold;
     padding: 3px 5px;
     background-color: var(--color-secondary);
     border: none;
     border-radius: 5px;
     color: #0f172a;
+    transition: all .3s ease;
 }
 
-#add-task-btn:hover {
+#new-task-btn:hover {
     cursor: pointer;
+    transform: translateY(-2px);
+}
+
+#new-task-btn:active {
+    background-color: #59ce84;
+    transform: translateY(2px);
 }
 
 .task-container {
@@ -107,8 +124,38 @@ main {
     min-width: 300px;
 }
 
-.task-list {
+#ongoing-task-list {
     list-style-type: none;
+}
+
+.task {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.task-text {
+    font-size: 1.8rem;
+    margin-left: 10px;
+}
+
+.delete-btn {
+    padding: 3px;
+    border: none;
+    border-radius: 3px;
+    background-color: var(--color-danger);
+    font-weight: bold;
+    transition: all .3s ease;
+}
+
+.delete-btn:hover {
+    cursor: pointer;
+    transform: translateY(-2px);
+}
+
+.delete-btn:active {
+    background-color: #ff6565;
+    transform: translateY(2px);
 }
 
 /* Footer */
