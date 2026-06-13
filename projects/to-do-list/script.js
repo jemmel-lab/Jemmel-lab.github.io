@@ -5,6 +5,7 @@ const taskList = document.getElementById("ongoing-task-list");
 const taskArr = [];
 
 function updateTask() {
+    // displaying task
     taskList.innerHTML = taskArr.map((task, index) => {
         return `<li class="task" id="task${index+1}">
             <div>
@@ -18,6 +19,7 @@ function updateTask() {
 updateTask();
 
 newTaskBtn.addEventListener("click", () => {
+    // check if input is valid and new
     if(!newTaskInput.value) {
         alert("Please add a task!");
         return;
@@ -26,6 +28,7 @@ newTaskBtn.addEventListener("click", () => {
         alert("Task already added!");
         return;
     }
+
     taskArr.push(newTaskInput.value);
     updateTask();
 })
