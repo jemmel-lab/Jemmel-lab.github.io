@@ -139,6 +139,10 @@ main {
     margin-left: 10px;
 }
 
+.crossed-out {
+  text-decoration: line-through;
+}
+
 .delete-btn {
     padding: 3px;
     border: none;
