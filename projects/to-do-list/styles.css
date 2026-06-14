@@ -111,7 +111,7 @@ main {
 }
 
 #new-task-btn:active {
-    background-color: #59ce84;
+    background-color: #15aa4c;
     transform: translateY(2px);
 }
 
@@ -158,7 +158,7 @@ main {
 }
 
 .delete-btn:active {
-    background-color: #ff6565;
+    background-color: #b92626;
     transform: translateY(2px);
 }
 
