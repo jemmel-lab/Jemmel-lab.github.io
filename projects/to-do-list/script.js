@@ -9,8 +9,8 @@ function updateTask() {
     ongoingTaskList.innerHTML = taskArr.map((task, index) => {
         return `<li class="task" id="task${index}">
             <div>
-                <input type="checkbox" class="checkbox" name="task${index}-checkbox" data-id="${task.id}" ${task.completed ? "checked" : ""}>
-                <span class="task-text ${task.completed ? "crossed-out" : "" }" data-id="${task.id}">${task.text}</span>
+                <input type="checkbox" class="checkbox" name="task${index}-checkbox" data-id="${task.id}" ${task.status == "complete" ? "checked" : ""}>
+                <span class="task-text ${task.status == "complete" ? "crossed-out" : "" }" data-id="${task.id}">${task.text}</span>
             </div>
             <button class="delete-btn" data-id="${task.id}">&#10005;</button>
         </li>`
@@ -27,7 +27,7 @@ newTaskBtn.addEventListener("click", () => {
         alert("Please add a task!");
         return;
     }
-    if(taskArr.includes(newTaskInput.value)) {
+    if(taskArr.some(task => task.text === newTaskInput.value)) {
         alert("Task already added!");
         return;
     }
@@ -36,7 +36,7 @@ newTaskBtn.addEventListener("click", () => {
     const task = {
         id: Date.now(),
         text: newTaskInput.value,
-        completed: false
+        status: "ongoing"
     };
     // Adding task to array
     taskArr.push(task);
@@ -62,7 +62,7 @@ ongoingTaskList.addEventListener("click", (e) => {
         // Get the id of clicked task
         const id = Number(e.target.dataset.id);
         const task = taskArr.find(task => task.id === id);
-        task.completed = !task.completed;
+        task.status = task.status == "ongoing" ? "complete" : "ongoing";
 
         updateTask();
     }
