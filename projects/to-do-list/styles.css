@@ -115,6 +115,11 @@ main {
     transform: translateY(2px);
 }
 
+#task-group {
+    display: flex;
+    gap: 20px;
+}
+
 .task-container {
     background-color: var(--color-bg-secondary);
     padding: 20px;
@@ -143,6 +148,16 @@ main {
   text-decoration: line-through;
 }
 
+#ongoing-task h3 {
+    color: var(--color-primary);
+}
+#completed-task h3 {
+    color: var(--color-success);
+}
+#deleted-task h3 {
+    color: var(--color-danger);
+}
+
 .delete-btn {
     padding: 3px;
     border: none;
@@ -152,13 +167,27 @@ main {
     transition: all .3s ease;
 }
 
-.delete-btn:hover {
+.revert-btn:hover, .delete-btn:hover {
     cursor: pointer;
     transform: translateY(-2px);
 }
 
 .delete-btn:active {
     background-color: #b92626;
+    transform: translateY(2px);
+}
+
+.revert-btn {
+    padding: 3px;
+    border: none;
+    border-radius: 3px;
+    background-color: var(--color-info);
+    font-weight: bold;
+    transition: all .3s ease;
+}
+
+.revert-btn:active {
+    background-color: #068ea7;
     transform: translateY(2px);
 }
 
