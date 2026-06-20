@@ -1,3 +1,4 @@
+const taskForm = document.getElementById("task-form");
 const newTaskInput = document.getElementById("new-task-input");
 const newTaskBtn = document.getElementById("new-task-btn");
 const ongoingTaskList = document.getElementById("ongoing-task-list");
@@ -5,12 +6,13 @@ const completedTaskList = document.getElementById("completed-task-list");
 const deletedTaskList = document.getElementById("deleted-task-list");
 
 const taskArr = [];
+updateTask();
 
 function updateTask() {
     // displaying task
     ongoingTaskList.innerHTML = taskArr
         .filter((task) => task.status === "ongoing")
-        .map((task) => {
+        .map((task) => {1
             return `<li class="task" id="task${task.id}">
                 <div>
                     <input type="checkbox" class="checkbox" name="checkbox-${task.id}" data-id="${task.id}">
@@ -43,17 +45,16 @@ function updateTask() {
         })
         .join("");
 };
-updateTask();
 
 // Add new task
 newTaskBtn.addEventListener("click", () => {
-    // TO-DO: make prettier alerts
     // check if input is valid and new
-    if(!newTaskInput.value) {
+    const taskText = newTaskInput.value.trim();
+    if(!taskText) {
         alert("Please add a task!");
         return;
     }
-    if(taskArr.some(task => task.text === newTaskInput.value)) {
+    if(taskArr.some(task => task.text.toLowerCase() === taskText.toLowerCase())) {
         alert("Task already added!");
         return;
     }
@@ -61,7 +62,7 @@ newTaskBtn.addEventListener("click", () => {
     // Creating task
     const task = {
         id: Date.now(),
-        text: newTaskInput.value,
+        text: taskText,
         status: "ongoing"
     };
     // Adding task to array
@@ -69,7 +70,12 @@ newTaskBtn.addEventListener("click", () => {
 
     newTaskInput.value = "";
     updateTask();
-})
+});
+taskForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    newTaskBtn.click();
+
+});
 
 // Delete task or Mark as complete task
 ongoingTaskList.addEventListener("click", (e) => {

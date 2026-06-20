@@ -118,6 +118,8 @@ main {
 #task-group {
     display: flex;
     gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .task-container {
@@ -136,12 +138,19 @@ main {
 .task {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.task div {
+    flex: 1;
+    min-width: 0;
 }
 
 .task-text {
     font-size: 1.8rem;
     margin-left: 10px;
+    overflow-wrap: break-word;
 }
 
 .crossed-out {
