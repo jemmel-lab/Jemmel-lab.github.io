@@ -115,6 +115,13 @@ main {
     transform: translateY(2px);
 }
 
+#task-group {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 .task-container {
     background-color: var(--color-bg-secondary);
     padding: 20px;
@@ -131,16 +138,33 @@ main {
 .task {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.task div {
+    flex: 1;
+    min-width: 0;
 }
 
 .task-text {
     font-size: 1.8rem;
     margin-left: 10px;
+    overflow-wrap: break-word;
 }
 
 .crossed-out {
   text-decoration: line-through;
+}
+
+#ongoing-task h3 {
+    color: var(--color-primary);
+}
+#completed-task h3 {
+    color: var(--color-success);
+}
+#deleted-task h3 {
+    color: var(--color-danger);
 }
 
 .delete-btn {
@@ -152,13 +176,27 @@ main {
     transition: all .3s ease;
 }
 
-.delete-btn:hover {
+.revert-btn:hover, .delete-btn:hover {
     cursor: pointer;
     transform: translateY(-2px);
 }
 
 .delete-btn:active {
     background-color: #b92626;
+    transform: translateY(2px);
+}
+
+.revert-btn {
+    padding: 3px;
+    border: none;
+    border-radius: 3px;
+    background-color: var(--color-info);
+    font-weight: bold;
+    transition: all .3s ease;
+}
+
+.revert-btn:active {
+    background-color: #068ea7;
     transform: translateY(2px);
 }
 

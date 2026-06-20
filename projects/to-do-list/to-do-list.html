@@ -7,49 +7,57 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- TO-DO: make prettier alerts -->
+     <!-- TO-DO List on my to-do list hehehehe
+     local storage
+     edit task
+     clear all completed task
+     due dates
+     priority level
+     search task
+     dark/light mode toggle
+     drag and drop task ordering -->
     <header>
         <h1>To-do List</h1>
     </header>
     <main>
         <div id="add-to-list-container">
             <h2>Add a new task</h2>
-            <form>
+            <form id="task-form">
                 <input type="text" id="new-task-input">
                 <button type="button" id="new-task-btn">Add</button>
             </form>
         </div>
-        <!-- TO-DO fix layout -->
-        <div id="tasks">
-            <!-- TO-DO handle long task -->
+        <div id="task-group">
             <div id="ongoing-task" class="task-container">
                 <h3>Ongoing tasks</h3>
                 <ul id="ongoing-task-list" class="task-list">
-                    <!-- <li class="task" id="task1">
+                    <!-- <li class="task" id="task${task.id}">
                         <div>
-                            <input type="checkbox" class="checkbox" name="task1-checkbox" data-id="1">
-                            <span class="task-text" data-id="1">Task 1</span>
+                            <input type="checkbox" class="checkbox" name="checkbox-${task.id}" data-id="${task.id}">
+                            <span class="task-text" data-id="${task.id}">${task.text}</span>
                         </div>
-                        <button class="delete-btn" data-id="1">&#10005;</button>
+                        <button class="delete-btn" data-id="${task.id}">&#10005;</button>
                     </li> -->
                 </ul>
             </div>
-            <!-- TO-DO -->
-            <!-- <div id="completed-task" class="task-container">
+            <div id="completed-task" class="task-container">
                 <h3>Completed tasks</h3>
                 <ul id="completed-task-list" class="task-list">
-                    <li class="task" id="task1">
+                    <!-- <li class="task" id="task${task.id}">
                         <div>
-                            <input type="checkbox" class="checkbox" name="task1-checkbox" data-id="1">
-                            <span class="task-text" data-id="1">Task 1</span>
+                            <span class="task-text" data-id="${task.id}">${task.text}</span>
                         </div>
-                        <button class="delete-btn" data-id="1">&#10005;</button>
-                    </li>
+                        <button class="revert-btn" data-id="${task.id}">&cularr;</button>
+                    </li> -->
                 </ul>
-            </div> -->
-            <!-- TO-DO -->
-            <!-- <div id="deleted-task" class="task-container">
-                
-            </div> -->
+            </div>
+            <div id="deleted-task" class="task-container">
+                <h3>Deleted tasks</h3>
+                <ul id="deleted-task-list" class="task-list">
+
+                </ul>
+            </div>
         </div>
     </main>
     <footer>

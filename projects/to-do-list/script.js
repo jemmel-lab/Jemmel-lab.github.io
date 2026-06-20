@@ -1,33 +1,60 @@
+const taskForm = document.getElementById("task-form");
 const newTaskInput = document.getElementById("new-task-input");
 const newTaskBtn = document.getElementById("new-task-btn");
 const ongoingTaskList = document.getElementById("ongoing-task-list");
+const completedTaskList = document.getElementById("completed-task-list");
+const deletedTaskList = document.getElementById("deleted-task-list");
 
 const taskArr = [];
+updateTask();
 
 function updateTask() {
     // displaying task
-    ongoingTaskList.innerHTML = taskArr.map((task, index) => {
-        return `<li class="task" id="task${index}">
-            <div>
-                <input type="checkbox" class="checkbox" name="task${index}-checkbox" data-id="${task.id}" ${task.status == "complete" ? "checked" : ""}>
-                <span class="task-text ${task.status == "complete" ? "crossed-out" : "" }" data-id="${task.id}">${task.text}</span>
-            </div>
-            <button class="delete-btn" data-id="${task.id}">&#10005;</button>
-        </li>`
-    }).join("");
-    console.log(taskArr)
+    ongoingTaskList.innerHTML = taskArr
+        .filter((task) => task.status === "ongoing")
+        .map((task) => {1
+            return `<li class="task" id="task${task.id}">
+                <div>
+                    <input type="checkbox" class="checkbox" name="checkbox-${task.id}" data-id="${task.id}">
+                    <span class="task-text" data-id="${task.id}">${task.text}</span>
+                </div>
+                <button class="delete-btn" data-id="${task.id}">&#10005;</button>
+            </li>`
+        })
+        .join("");
+    completedTaskList.innerHTML = taskArr
+        .filter((task) => task.status === "complete")
+        .map((task) => {
+            return `<li class="task" id="task${task.id}">
+                <div>
+                    <span class="task-text" data-id="${task.id}">${task.text}</span>
+                </div>
+                <button class="revert-btn" data-id="${task.id}">&cularr;</button>
+            </li>`
+        })
+        .join("");
+    deletedTaskList.innerHTML = taskArr
+        .filter((task) => task.status === "deleted")
+        .map((task) => {
+            return `<li class="task" id="task${task.id}">
+                <div>
+                    <span class="task-text" data-id="${task.id}">${task.text}</span>
+                </div>
+                <button class="revert-btn" data-id="${task.id}">&cularr;</button>
+            </li>`
+        })
+        .join("");
 };
-updateTask();
 
 // Add new task
 newTaskBtn.addEventListener("click", () => {
-    // TO-DO: make prettier alerts
     // check if input is valid and new
-    if(!newTaskInput.value) {
+    const taskText = newTaskInput.value.trim();
+    if(!taskText) {
         alert("Please add a task!");
         return;
     }
-    if(taskArr.some(task => task.text === newTaskInput.value)) {
+    if(taskArr.some(task => task.text.toLowerCase() === taskText.toLowerCase())) {
         alert("Task already added!");
         return;
     }
@@ -35,7 +62,7 @@ newTaskBtn.addEventListener("click", () => {
     // Creating task
     const task = {
         id: Date.now(),
-        text: newTaskInput.value,
+        text: taskText,
         status: "ongoing"
     };
     // Adding task to array
@@ -43,27 +70,49 @@ newTaskBtn.addEventListener("click", () => {
 
     newTaskInput.value = "";
     updateTask();
-})
+});
+taskForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    newTaskBtn.click();
 
-// Delete task or Mark as done task
+});
+
+// Delete task or Mark as complete task
 ongoingTaskList.addEventListener("click", (e) => {
+    // Get the id of clicked task
+    const id = Number(e.target.dataset.id);
+    const task = taskArr.find(task => task.id === id);
+
     // Check if delete button is clicked
      if (e.target.classList.contains("delete-btn")) {
-        // Get the id of clicked task
-        const id = Number(e.target.dataset.id);
-        // Find the index of clicked task
-        const index = taskArr.findIndex(task => task.id === id);
-
-        taskArr.splice(index, 1);
-        updateTask();
+        task.status = "deleted";
     }
     // Check if checkbox is clicked
      if (e.target.classList.contains("checkbox")) {
+        task.status = "complete";
+    }
+    updateTask();
+})
+
+// Revert completed task to ongoing
+completedTaskList.addEventListener("click", (e) => {
+    // Check if revert button is clicked
+     if (e.target.classList.contains("revert-btn")) {
         // Get the id of clicked task
         const id = Number(e.target.dataset.id);
         const task = taskArr.find(task => task.id === id);
-        task.status = task.status == "ongoing" ? "complete" : "ongoing";
-
-        updateTask();
+        task.status = "ongoing";
     }
+    updateTask();
 })
+deletedTaskList.addEventListener("click", (e) => {
+    // Check if revert button is clicked
+     if (e.target.classList.contains("revert-btn")) {
+        // Get the id of clicked task
+        const id = Number(e.target.dataset.id);
+        const task = taskArr.find(task => task.id === id);
+        task.status = "ongoing";
+    }
+    updateTask();
+})
+
