@@ -17,6 +17,7 @@ lucide.createIcons();
 // Initialize list storage
 
 const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+const trash = JSON.parse(localStorage.getItem("trash")) || [];
     // localStorage.setItem("tasks", JSON.stringify(tasks));
 
 
@@ -505,6 +506,9 @@ function updateTaskList(taskId) {
 }
 
 function deleteTask(taskId) {
+    const task = tasks.find(task => task.id === taskId);
+    trash.push(task);
+    localStorage.setItem("trash", JSON.stringify(trash));
     const taskIndex = tasks.findIndex(task => task.id === taskId);
     tasks.splice(taskIndex, 1);
     localStorage.setItem("tasks", JSON.stringify(tasks));
