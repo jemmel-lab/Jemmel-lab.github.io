@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-do List 2.0</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app">
+        <nav>
+            <div class="nav-header">
+                <i data-lucide="list-todo"></i>
+                <span>To-Do List V2.0</span>
+            </div>
+            <div class="nav-divider"></div>
+            <div class="nav-filter">
+                <ul>
+                    <li class="nav-link" id="all-task-li">
+                        <span>
+                            <i data-lucide="grid-2x2"></i>
+                            <span>All Tasks</span>
+                        </span>
+                        <span class="nav-badges" id="all-task-count">0</span>
+                    </li>
+                    <li class="nav-link" id="today-li">
+                        <span>
+                            <i data-lucide="calendar"></i>
+                            <span>Today</span>
+                        </span>
+                        <span class="nav-badges" id="today-count">0</span>
+                    </li>
+                    <li class="nav-link" id="favorite-li">
+                        <span>
+                            <i data-lucide="star"></i>
+                            <span>Favorite</span>
+                        </span>
+                        <span class="nav-badges" id="favorite-count">0</span>
+                    </li>
+                    <li class="nav-link" id="completed-li">
+                        <span>
+                            <i data-lucide="circle-check"></i>
+                            <span>Completed</span>
+                        </span>
+                        <span class="nav-badges" id="completed-count">0</span>
+                    </li>
+                    <li class="nav-link" id="trash-li">
+                        <span>
+                            <i data-lucide="trash"></i>
+                            <span>Trash</span>
+                        </span>
+                        <span class="nav-badges" id="trash-count">0</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="nav-divider"></div>
+            <div class="nav-categories">
+
+            </div>
+        </nav>
+        <main>
+            <header>
+                <h1>Tasks</h1>
+                <div>
+                    <form id="search-form">
+                        <input type="text" id="search-input" placeholder="Search tasks..." required>
+                        <button type="submit" id="search-btn">
+                            <i data-lucide="search"></i>
+                        </button>
+                    </form>
+                    <button type="button" id="add-task-btn">
+                        <i data-lucide="plus"></i>
+                        Add Task
+                    </button>
+                </div>
+            </header>
+            <div class="quick-add-task-container add-box-shadow">
+                <input type="text" id="quick-add-task-input" placeholder="What needs to be done?" required>
+                <div class="quick-add-task-controls">
+                    <div class="dropdowns-conrainer" id="quick-add-task-dropdown">
+                        <div class="dropdown">
+                            <button class="dropdown-btn" id="due-date-dropdown-btn">
+                                <i data-lucide="calendar"></i>
+                                <span>Due Date</span>
+                            </button>
+                            <div class="dropdown-menu" id="due-date-dropdown-menu">
+                                <div class="due-date-radio">
+                                    <label for="no-due-date">
+                                        <input type="radio" name="due-date-radio" id="no-due-date">
+                                        No due date
+                                    </label>
+                                    <label for="due-date-today">
+                                        <input type="radio" name="due-date-radio" id="due-date-today">
+                                        Today
+                                    </label>
+                                    <label for="due-date-tomorrow">
+                                        <input type="radio" name="due-date-radio" id="due-date-tomorrow">
+                                        Tomorrow
+                                    </label>
+                                </div>
+                                <label for="due-date-picker">Set Date:</label>
+                                <input type="date" id="due-date-picker">
+                            </div>
+                        </div>
+                        <div class="dropdown">
+                            <button class="dropdown-btn" id="priority-dropdown-btn">
+                                <i data-lucide="flag"></i>
+                                <span>Priority</span>
+                            </button>
+                            <div class="dropdown-menu" id="priority-dropdown-menu">
+                                <button type="button" id="high-priority-btn">
+                                    <i data-lucide="flag"></i>
+                                    <span>High</span>
+                                </button>
+                                <button type="button" id="medium-priority-btn">
+                                    <i data-lucide="flag"></i>
+                                    <span>Medium</span>
+                                </button>
+                                <button type="button" id="low-priority-btn">
+                                    <i data-lucide="flag"></i>
+                                    <span>Low</span>
+                                </button>
+                                <button type="button" id="no-priority-btn">
+                                    <i data-lucide="flag-off"></i>
+                                    <span>No priority</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="dropdown">
+                            <button class="dropdown-btn" id="category-dropdown-btn">
+                                <i data-lucide="tag"></i>
+                                <span>Category</span>
+                            </button>
+                            <div class="dropdown-menu" id="category-dropdown-menu">
+                                <button type="button" id="work-category-btn">
+                                    <i data-lucide="tag"></i>
+                                    <span>Work</span>
+                                </button>
+                                <button type="button" id="personal-category-btn">
+                                    <i data-lucide="tag"></i>
+                                    <span>Personal</span>
+                                </button>
+                                <button type="button" id="study-category-btn">
+                                    <i data-lucide="tag"></i>
+                                    <span>Study</span>
+                                </button>
+                                <button type="button" id="other-category-btn">
+                                    <i data-lucide="tag"></i>
+                                    <span>Other</span>
+                                </button>
+                                <button type="button" id="no-category-btn">
+                                    <i data-lucide="tag-x"></i>
+                                    <span>No category</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" id="quick-add-task-btn">
+                        Add Task
+                    </button>
+                </div>
+            </div>
+            <div class="task-list-container">
+                <div class="task-list-controls">
+                    <div class="status-controls">
+                        <button type="button" class="task-list-control-btn selected" id="task-list-all-btn">
+                            All
+                        </button>
+                        <button type="button" class="task-list-control-btn" id="task-list-ongoing-btn">
+                            Ongoing
+                        </button>
+                        <button type="button" class="task-list-control-btn" id="task-list-completed-btn">
+                            Completed
+                        </button>
+                    </div>
+                    <div class="display-controls">
+                        <div class="sort-by-controls">
+                            <div class="sort-dropdown">
+                                <button class="sort-dropdown-btn">
+                                    <span>Sort by</span>
+                                    <i data-lucide="chevron-down"></i>
+                                </button>
+                                <div class="sort-dropdown-menu">
+                                    <button id="sort-dropdown-menu-due-date">
+                                        <i data-lucide="calendar"></i>
+                                        <span>Due Date</span>
+                                    </button>
+                                    <button id="sort-dropdown-menu-priority">
+                                        <i data-lucide="flag"></i>
+                                        <span>Priority</span>
+                                    </button>
+                                    <button id="sort-dropdown-menu-date-added">
+                                        <i data-lucide="clock"></i>
+                                        <span>Date Added</span>
+                                    </button>
+                                    <button id="sort-dropdown-menu-alphabetical">
+                                        <i data-lucide="arrow-up-a-z"></i>
+                                        <span>Alphabetical</span>
+                                    </button>
+                                    <button id="sort-dropdown-menu-category">
+                                        <i data-lucide="tag"></i>
+                                        <span>Category</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <button class="ascending-descending">
+                                <span>Due Date</span>
+                                <i data-lucide="move-up"></i>
+                            </button>
+                        </div>
+                        <div class="display-controls">
+                            <button class="list-display-controls selected">
+                                <i data-lucide="list"></i>
+                            </button>
+                            <button class="grid-display-controls">
+                                <i data-lucide="layout-grid"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="task-list">
+                    <ul class="task-list-ul">
+                        <!-- <li class="task" data-id="${task.id}">
+                            <input type="checkbox" class="task-checkbox" ${task.status === "Completed" ? "checked" : ""}>
+                            <div class="task-info ${task.status === "Completed" ? "completed" : ""}">
+                                <span class="task-title">${task.title}</span>
+                                <div>
+                                    <span>
+                                        <i data-lucide="calendar"></i>
+                                        ${task.dueDate}
+                                    </span>
+                                    <span>
+                                        <i data-lucide="flag"></i>
+                                        ${task.priority}
+                                    </span>
+                                    <span>
+                                        <i data-lucide="tag"></i>
+                                        ${task.category}
+                                    </span>
+                                </div>
+                            </div>
+                            <button type="button" class="task-btn task-favorite-btn ${task.favorite ? "favorite" : ""}">
+                                <i data-lucide="star"></i>
+                            </button>
+                            <button type="button" class="task-btn delete-btn">
+                                <i data-lucide="trash"></i>
+                            </button>
+                        </li> -->
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal" id="task-modal">
+        <div class="modal-content">
+            <div class="task-modal-header">
+                <h2>Add new task</h2>
+                <button type="button" id="delete-btn">
+                    <i data-lucide="trash-2"></i>
+                </button>
+                <button type="button" id="clear-btn">
+                    <i data-lucide="eraser"></i>
+                </button>
+            </div>
+            <div class="task-info">
+                <label for="task-title-input">
+                    <span>Title:</span>
+                    <input type="text" class="task-info-inputs" id="task-title-input" placeholder="What needs to be done?" required>
+                </label>
+                <label for="task-description-input">
+                    <span>Description:</span>
+                    <textarea class="task-info-inputs" id="task-description-input" placeholder="e.g., Fix the navigation bar jumpiness on mobile, verify safari layout compatibility, and deploy patch to staging."></textarea>
+                </label>
+            </div>
+            <!-- TO-DO color each priority and category -->
+            <div class="task-additional-info">
+                <h3>More info</h3>
+                <label for="task-due-date-input" id="task-modal-due-date">
+                    <span>Due Date:</span>
+                    <input type="date" id="task-due-date-input">
+                </label>
+                <div id="task-modal-priority-radios" class="radio-container">
+                    <span>Priority:</span>
+                    <label for="high-priority-radio">
+                        <input type="radio" name="priority-radio" id="high-priority-radio" value="High">
+                        <span>High</span>
+                    </label>
+                    <label for="medium-priority-radio">
+                        <input type="radio" name="priority-radio" id="medium-priority-radio" value="Medium">
+                        <span>Medium</span>
+                    </label>
+                    <label for="low-priority-radio">
+                        <input type="radio" name="priority-radio" id="low-priority-radio" value="Low">
+                        <span>Low</span>
+                    </label>
+                    <label for="no-priority-radio">
+                        <input type="radio" name="priority-radio" id="no-priority-radio" value="None" checked>
+                        <span>None</span>
+                    </label>
+                </div>
+                <div id="task-modal-category-radios" class="radio-container">
+                    <span>Category:</span>
+                    <label for="work-category-radio">
+                        <input type="radio" name="category-radio" id="work-category-radio" value="Work">
+                        <span>Work</span>
+                    </label>
+                    <label for="personal-category-radio">
+                        <input type="radio" name="category-radio" id="personal-category-radio" value="Personal">
+                        <span>Personal</span>
+                    </label>
+                    <label for="study-category-radio">
+                        <input type="radio" name="category-radio" id="study-category-radio" value="Study">
+                        <span>Study</span>
+                    </label>
+                    <label for="other-category-radio">
+                        <input type="radio" name="category-radio" id="other-category-radio" value="Other">
+                        <span>Other</span>
+                    </label>
+                    <label for="no-category-radio">
+                        <input type="radio" name="category-radio" id="no-category-radio" value="None" checked>
+                        <span>None</span>
+                    </label>
+                </div>
+            </div>
+            <div class="task-btns">
+                <button type="button" id="cancel-btn">
+                    <span>Cancel</span>
+                </button>
+                <button type="button" id="confirm-btn">
+                    <span>Confim</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- <footer>
+        <p>© 2026 Bench Jemmel</p>
+    </footer> -->
+    <script src="script.js" defer></script>
+</body>
+</html>

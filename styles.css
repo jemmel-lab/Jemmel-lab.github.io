@@ -54,32 +54,33 @@ header {
     color: var(--color-text);
     height: 8rem;
     width: 100%;
-    padding: 2rem;;
+    padding: 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: fixed;
     z-index: 1000;
     border-bottom: solid 1px var(--color-bg);
-}
 
-header h1 {
-    color: var(--color-primary);
-    margin: 0;
-}
+    & h1 {
+        color: var(--color-primary);
+        margin: 0;
+    }
 
-header nav a {
-    color: var(--color-secondary);
-    text-decoration: none;
-    margin-left: 1rem;
-    transition: all 0.3s ease;
-    display: inline-block; /* needed for transform */
-}
+    & nav a {
+        color: var(--color-secondary);
+        text-decoration: none;
+        margin-left: 1rem;
+        transition: all 0.3s ease;
+        display: inline-block; /* needed for transform */
+    }
 
-header nav a:hover {
-    text-decoration: underline;
-    text-underline-offset: 6px;
-    transform: scale(1.1);
+    & nav a:hover {
+        text-decoration: underline;
+        text-underline-offset: 6px;
+        transform: scale(1.1);
+    }
+
 }
 
 main {
@@ -92,32 +93,38 @@ section {
     min-height: calc(100vh - 80px);
     padding: 3rem 2rem;
     min-width: 320px;
-}
 
-section h2 {
-    color: var(--color-primary);
-    font-size: 3.5rem;
+    & h2 {
+        color: var(--color-primary);
+        font-size: 3.5rem;
+    }
+
 }
 
 /* About section */
 
-#about #about-content {
-    display:flex;
-    align-items: center;
-    justify-content: space-evenly;
-    text-align: left;
-    padding: 20px 30px;
+#about {
+    & #about-content {
+        display:flex;
+        align-items: center;
+        justify-content: space-evenly;
+        text-align: left;
+        padding: 20px 30px;
+
+        img {
+            width: 15vw;
+            min-width: 150px;
+            margin: 10px 40px 10px;
+            box-shadow:0 0 3px 3px rgba(255, 255, 255, .2);
+            border-radius: 50%;
+        }
+
+    }
+
 }
 
-#about #about-content img {
-    width: 15vw;
-    min-width: 150px;
-    margin: 10px 40px 10px;
-    box-shadow:0 0 3px 3px rgba(255, 255, 255, .2);
-    border-radius: 50%;
-}
-
-#skills-content ul {
+#skills-content {
+  & ul {
     background-color: var(--color-bg-secondary);
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -125,60 +132,62 @@ section h2 {
     list-style: none;
     padding: 20px 30px;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 
-#skills-content ul li {
-    display: flex;
-    width: 100%;
-    gap: 20px;
-}
+    & li {
+      display: flex;
+      width: 100%;
+      gap: 20px;
 
-#skills-content ul li:hover {
-    transform: scale(1.05);
-    transition: 0.3s ease;
-}
+      & i {
+        font-size: 4rem;
+        padding: 10px;
+        color: var(--color-text);
+      }
 
-#skills-content ul li i {
-    font-size: 4rem;
-    padding: 10px;
-    color: var(--color-text);
-}
+      &:last-of-type i {
+        font-size: 3rem;
+        margin-right: 22.5px;
+        padding: 10px;
+      }
 
-#skills-content ul li:last-of-type i {
-    font-size: 3rem;
-    margin-right: 22.5px;
-    padding: 10px;
-}
+      & .skill-content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
 
-#skills-content ul li .skill-content {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-}
+        & span {
+          font-size: 1.4rem;
+        }
 
-#skills-content ul li .skill-content span {
-    font-size: 1.4rem;
-}
+        & .skill-bar {
+          width: 100%;
+          height: 5px;
+          background-color: var(--color-bg);
+          border-radius: 5px;
 
-#skills-content ul li .skill-content .skill-bar {
-    width: 100%;
-    height: 5px;
-    background-color: var(--color-bg);
-    border-radius: 5px;
+        }
+      }
+
+      &:hover {
+        transform: scale(1.05);
+        transition: 0.3s ease;
+
+        & .skill-content .skill-bar .progress {
+          background-color: var(--color-secondary);
+        }
+      }
+    }
+  }
 }
 
 .progress {
     border-radius: 5px;
     height: 100%;
     background-color: var(--color-primary);
-    transition: all .5s ease;
-}
-
-#skills-content ul li:hover .skill-content .skill-bar .progress {
-    background-color: var(--color-secondary);
+    transition: all 0.5s ease;
 }
 
 #html > .progress {
@@ -209,45 +218,46 @@ section h2 {
 /* Experience section */
 
 #experience-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    padding: 0 20px;
-}
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 0 20px;
 
-#experience-content article {
+  & article {
     flex: 1 1 300px;
     width: 260px;
     background-color: var(--color-bg-secondary);
     padding: 15px;
     border-radius: 10px;
     line-height: 1.4;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+
+    & h3 {
+      margin-bottom: 5px;
+    }
+
+    & p {
+      font-size: 1.5rem;
+    }
+
+    & ul {
+      margin-top: 10px;
+      padding-left: 20px;
+      font-size: 1.5rem;
+
+      & li {
+        margin-bottom: 8px;
+      }
+    }
+
+    &:hover {
+      transform: translateY(-5px);
+      transition: 0.3s ease;
+    }
+  }
 }
 
-#experience-content article h3 {
-    margin-bottom: 5px;
-}
-
-#experience-content article p {
-    font-size: 1.5rem;
-}
-
-#experience-content article ul {
-    margin-top: 10px;
-    padding-left: 20px;
-    font-size: 1.5rem;
-}
-
-#experience-content article li {
-    margin-bottom: 8px;
-}
-
-#experience-content article:hover {
-    transform: translateY(-5px);
-    transition: 0.3s ease;
-}
 
 /* Project */
 #project-content {
@@ -258,13 +268,13 @@ section h2 {
     max-height: calc(100vh - 80px);
     overflow-y: scroll;
     overflow-x: hidden;
-}
 
+    & a {
+        display: inline-block;
+        width: auto;
+        text-decoration: none;
+    }
 
-#project-content a {
-    display: inline-block;
-    width: auto;
-    text-decoration: none;
 }
 
 .project-card {
