@@ -17,7 +17,7 @@
             <div class="nav-divider"></div>
             <div class="nav-filter">
                 <ul>
-                    <li class="nav-link" id="all-task-li">
+                    <li class="nav-link selected" id="all-task-li">
                         <span>
                             <i data-lucide="grid-2x2"></i>
                             <span>All Tasks</span>
@@ -37,6 +37,13 @@
                             <span>Favorite</span>
                         </span>
                         <span class="nav-badges" id="favorite-count">0</span>
+                    </li>
+                    <li class="nav-link" id="ongoing-li">
+                        <span>
+                            <i data-lucide="rotate-ccw-clock"></i>
+                            <span>Ongoing</span>
+                        </span>
+                        <span class="nav-badges" id="ongoing-count">0</span>
                     </li>
                     <li class="nav-link" id="completed-li">
                         <span>
@@ -61,7 +68,7 @@
         </nav>
         <main>
             <header>
-                <h1>Tasks</h1>
+                <h1>All Tasks</h1>
                 <div>
                     <form id="search-form">
                         <input type="text" id="search-input" placeholder="Search tasks..." required>

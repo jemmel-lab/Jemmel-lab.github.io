@@ -160,7 +160,6 @@ header {
         align-items: center;
 
         form {
-            margin-right: 20px;
             position: relative;
             display: flex;
             align-items: center;
@@ -186,6 +185,7 @@ header {
             align-items: center;
             padding: 5px;
             border: none;
+            margin-left: 10px;
             background-color: var(--color-primary);
             cursor: pointer;
             font-size: 1.7rem;
@@ -202,6 +202,10 @@ header {
         }
         button:active {
             transform: translateY(0);
+        }
+
+        .hide {
+            display: none;
         }
     }
 }
@@ -381,6 +385,9 @@ header {
             transform: translateY(0);
         }
     }
+    &.hide {
+        display: none;
+    }
 }
 
 .task-list-container {
@@ -389,10 +396,11 @@ header {
 
     .task-list-controls {  
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
         align-items: center;
         
         .status-controls { 
+            flex-grow: 1;
         
             button {
                 margin-right: 1rem;
@@ -418,6 +426,10 @@ header {
                 background-color: var(--color-primary);
                 color: #222;
                 box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            }
+
+            &.hide {
+                display: none;
             }
         }
 

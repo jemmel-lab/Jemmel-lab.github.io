@@ -39,9 +39,12 @@ document.addEventListener("click", (e) => {
     // }
 });
 
-// Navigation ↓
+// Navigation and Main ↓
 
 const navLinks = document.querySelectorAll(".nav-link");
+let selectedNav = "all-task-li";
+renderMain(selectedNav);
+renderNavLinksBadges();
 
 navLinks.forEach(navLink => {
     navLink.addEventListener("click", () => {
@@ -49,10 +52,12 @@ navLinks.forEach(navLink => {
             navLink.classList.remove("selected");
         })
         navLink.classList.add("selected");
+        selectedNav = navLink.id;
+        renderMain(selectedNav);
     });
 });
 
-// Navigation ↑
+// Navigation and Main ↑
 
 // Search ↓
 
@@ -249,6 +254,7 @@ quickAddTaskBtn.addEventListener("click", () => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
     document.getElementById("task-modal").classList.remove("active");
     renderTask();
+
     selectedDate = "None";
     dueDate.textContent = "Due Date";
     dueDateBtn.style.color = "var(--color-text-muted)";
@@ -267,7 +273,6 @@ quickAddTaskBtn.addEventListener("click", () => {
 // Task list ↓
 
 // ---- Render tasks
-const taskListUl = document.querySelector(".task-list-ul");
 renderTask();
 
 // ---- Task list controls
@@ -339,8 +344,46 @@ gridDisplayBtn.addEventListener("click", () => {
 
 // Functions ↓
 
+function renderNavLinksBadges() {
+    const allTaskBadge = document.getElementById("all-task-count");
+    const todayBadge = document.getElementById("today-count");
+    const favoriteBadge = document.getElementById("favorite-count");
+    const ongoingBadge = document.getElementById("ongoing-count");
+    const completedBadge = document.getElementById("completed-count");
+    const trashBadge = document.getElementById("trash-count");
+
+    const now = formatDate(new Date());
+
+    allTaskBadge.textContent = tasks.length;
+    todayBadge.textContent = tasks.filter(task => task.dueDate === now).length;
+    favoriteBadge.textContent = tasks.filter(task => task.favorite === true).length;
+    ongoingBadge.textContent = tasks.filter(task => task.status === "Ongoing").length;
+    completedBadge.textContent = tasks.filter(task => task.status === "Completed").length;
+    trashBadge.textContent = trash.length;
+}
+
+function renderMain(selectedNav) {
+    const addTaskBtn = document.getElementById("add-task-btn");
+    const quickAddTaskCon = document.querySelector(".quick-add-task-container");
+    const statusControls = document.querySelector(".status-controls");
+
+    if (selectedNav !== "all-task-li") {
+        addTaskBtn.classList.add("hide");
+        quickAddTaskCon.classList.add("hide");
+        statusControls.classList.add("hide");
+    } else {
+        addTaskBtn.classList.remove("hide");
+        quickAddTaskCon.classList.remove("hide");
+        statusControls.classList.remove("hide");
+    }
+
+    renderNavLinksBadges();
+}
+
 function renderTask() {
+    const taskListUl = document.querySelector(".task-list-ul");
     taskListUl.innerHTML = "";
+
     tasks.forEach(task => {
         taskListUl.innerHTML += `
             <li class="task" data-id="${task.id}">
@@ -392,6 +435,7 @@ function renderTask() {
             }
         }
     });
+    renderNavLinksBadges();
     lucide.createIcons();
 };
 
@@ -506,6 +550,7 @@ function updateTaskList(taskId) {
     document.getElementById("task-modal").classList.remove("active");
     renderTask();
     clearTaskModal();
+    renderNavLinksBadges();
 }
 
 function deleteTask(taskId) {
@@ -515,18 +560,24 @@ function deleteTask(taskId) {
     const taskIndex = tasks.findIndex(task => task.id === taskId);
     tasks.splice(taskIndex, 1);
     localStorage.setItem("tasks", JSON.stringify(tasks));
+
+    renderNavLinksBadges();
 }
 
 function toggleStatus(taskId) {
     const task = tasks.find(task => task.id === taskId)
     task.status = task.status === "Completed" ? "Ongoing" : "Completed";
     localStorage.setItem("tasks", JSON.stringify(tasks));
+
+    renderNavLinksBadges();
 }
 
 function toggleFavorite(taskId) {
     const task = tasks.find(task => task.id === taskId)
     task.favorite = !task.favorite;
     localStorage.setItem("tasks", JSON.stringify(tasks));
+
+    renderNavLinksBadges();
 }
 
 function formatDate(date) {
