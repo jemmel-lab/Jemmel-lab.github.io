@@ -481,6 +481,9 @@ function updateTaskList(taskId) {
     const priority = modal.querySelector('input[name="priority-radio"]:checked');
     const category = modal.querySelector('input[name="category-radio"]:checked');
 
+    const status = tasks.find(task => task.id === taskId).status || "Ongoing";
+    const favorite = tasks.find(task => task.id === taskId).favorite || false;
+
     const newTaskObj = {
         id: crypto.randomUUID(),
         title: title.value,
@@ -488,8 +491,8 @@ function updateTaskList(taskId) {
         dueDate: dueDate,
         priority: priority.value,
         category: category.value,
-        favorite: false,
-        status: "Ongoing"
+        favorite: favorite,
+        status: status
     }
 
     const taskIndex = tasks.findIndex(task => task.id === taskId);
