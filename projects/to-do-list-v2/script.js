@@ -2,7 +2,7 @@ lucide.createIcons();
 
 // Notes:
 
-    // Clear all tasks: localStorage.removeItem("tasks");
+    // Clear all tasks: localStorage.removeItem("trash");
     // Task sample : const newTaskObj = {
                     //     id: crypto.randomUUID(),
                     //     title: title.value,
@@ -31,18 +31,56 @@ document.addEventListener("click", (e) => {
     if (!e.target.closest(".sort-by-controls")) {
         document.querySelector(".sort-dropdown-menu").classList.remove("active");
     }
-    // if (
-    //     !e.target.closest(".task-more-btn-menu") &&
-    //     !e.target.closest("#task-more-btn")
-    // ) {
-    //     document.querySelector(".task-more-btn-menu").classList.remove("active");
-    // }
 });
+// Setting Dates ↓
+
+const today = new Date();
+const tomorrow = new Date(today);
+tomorrow.setDate(tomorrow.getDate() + 1);
+const formattedToday = formatDate(today);
+const formattedTomorrow = formatDate(tomorrow);
+
+// Setting Dates ↑
 
 // Navigation and Main ↓
 
+const views = [
+    {
+        name: "all-task-li",
+        title: "All Tasks",
+        filter: task => true,
+    },
+    {
+        name: "today-li",
+        title: "Today",
+        filter: task => task.dueDate === formattedToday,
+    },
+    {
+        name: "favorite-li",
+        title: "Favorite",
+        filter: task => task.favorite,
+    },
+    {
+        name: "ongoing-li",
+        title: "Ongoing",
+        filter: task => task.status === "Ongoing",
+    },
+    {
+        name: "completed-li",
+        title: "Completed",
+        filter: task => task.status === "Completed",
+    },
+    {
+        name: "trash-li",
+        title: "Trash",
+        filter: task => true,
+    }
+];
+
 const navLinks = document.querySelectorAll(".nav-link");
 let selectedNav = "all-task-li";
+let currentView = views.find(view => view.name === selectedNav);
+
 renderMain(selectedNav);
 renderNavLinksBadges();
 
@@ -53,6 +91,7 @@ navLinks.forEach(navLink => {
         })
         navLink.classList.add("selected");
         selectedNav = navLink.id;
+        currentView = views.find(view => view.name === selectedNav);
         renderMain(selectedNav);
     });
 });
@@ -114,9 +153,6 @@ const dueDateRadio = document.querySelectorAll(".due-date-radio [name='due-date-
 const dueDatePicker = document.getElementById("due-date-picker");
 
 let selectedDate = "None";
-const today = new Date();
-const tomorrow = new Date(today);
-tomorrow.setDate(tomorrow.getDate() + 1);
 
 dueDateRadio.forEach(radio => {
     radio.addEventListener("change", () => {
@@ -130,12 +166,12 @@ dueDateRadio.forEach(radio => {
             case "due-date-today":
                 dueDate.textContent = "Today";
                 dueDateBtn.style.color = "var(--color-text)";
-                selectedDate = formatDate(today);
+                selectedDate = formattedToday;
                 break;
             case "due-date-tomorrow":
                 dueDate.textContent = "Tomorrow";
                 dueDateBtn.style.color = "var(--color-text)";
-                selectedDate = formatDate(tomorrow);
+                selectedDate = formattedTomorrow;
                 break;
         }
 
@@ -273,7 +309,29 @@ quickAddTaskBtn.addEventListener("click", () => {
 // Task list ↓
 
 // ---- Render tasks
-renderTask();
+const taskListUl = document.querySelector(".task-list-ul");
+
+taskListUl.addEventListener("click", (e) => {
+    if (e.target.closest(".task")) {
+        const taskElement = e.target.closest(".task");
+        const taskId = taskElement.dataset.id;
+
+        if (e.target.closest(".task-checkbox")) {
+            const taskLi = document.querySelector(`[data-id="${taskId}"] div`);
+            taskLi.classList.toggle("completed");
+            toggleStatus(taskId);
+        } else if (e.target.closest(".task-favorite-btn")) {
+            const taskLi = document.querySelector(`[data-id="${taskId}"] .task-favorite-btn`);
+            taskLi.classList.toggle("favorite");
+            toggleFavorite(taskId);
+        } else if (e.target.closest(".delete-btn")) {
+            taskElement.remove();
+            deleteTask(taskId);
+        } else {
+            showTaskModal("edit", taskId)
+        }
+    }
+});
 
 // ---- Task list controls
 const statusButtons = document.querySelectorAll(".status-controls button");
@@ -323,23 +381,6 @@ gridDisplayBtn.addEventListener("click", () => {
     listDisplayBtn.classList.remove("selected");
 });
 
-// ---- Task more button
-    // TO-DO remake all this ↓↓↓
-    // const taskImportantBtn = document.getElementById("task-important-btn");
-    // const taskMoreBtn = document.getElementById("task-more-btn");
-    // const taskMoreBtnMenu = document.querySelector(".task-more-btn-menu");
-    // const taskMoreEditBtn = document.getElementById("edit-task");
-    // const taskMoreDeleteBtn = document.getElementById("delete-task");
-
-    // taskImportantBtn.addEventListener("click", () => {
-    //     taskImportantBtn.classList.toggle("important");
-    // });
-
-    // taskMoreBtn.addEventListener("click", () => {
-    //     taskMoreBtnMenu.classList.toggle("active");
-
-// });
-
 // Task list ↑ 
 
 // Functions ↓
@@ -377,6 +418,10 @@ function renderMain(selectedNav) {
         statusControls.classList.remove("hide");
     }
 
+    const header = document.querySelector("header h1");
+    header.textContent = currentView.title;
+
+    renderTask()
     renderNavLinksBadges();
 }
 
@@ -384,7 +429,9 @@ function renderTask() {
     const taskListUl = document.querySelector(".task-list-ul");
     taskListUl.innerHTML = "";
 
-    tasks.forEach(task => {
+    let filteredTask = tasks.filter(currentView.filter);
+
+    filteredTask.forEach(task => {
         taskListUl.innerHTML += `
             <li class="task" data-id="${task.id}">
                 <input type="checkbox" class="task-checkbox" ${task.status === "Completed" ? "checked" : ""}>
@@ -414,27 +461,7 @@ function renderTask() {
             </li>
         `;
     });
-    taskListUl.addEventListener("click", (e) => {
-        if (e.target.closest(".task")) {
-            const taskElement = e.target.closest(".task");
-            const taskId = taskElement.dataset.id;
-
-            if (e.target.closest(".task-checkbox")) {
-                const taskLi = document.querySelector(`[data-id="${taskId}"] div`);
-                taskLi.classList.toggle("completed");
-                toggleStatus(taskId);
-            } else if (e.target.closest(".task-favorite-btn")) {
-                const taskLi = document.querySelector(`[data-id="${taskId}"] .task-favorite-btn`);
-                taskLi.classList.toggle("favorite");
-                toggleFavorite(taskId);
-            } else if (e.target.closest(".delete-btn")) {
-                taskElement.remove();
-                deleteTask(taskId);
-            } else {
-                showTaskModal("edit", taskId)
-            }
-        }
-    });
+    
     renderNavLinksBadges();
     lucide.createIcons();
 };
@@ -560,7 +587,7 @@ function deleteTask(taskId) {
     const taskIndex = tasks.findIndex(task => task.id === taskId);
     tasks.splice(taskIndex, 1);
     localStorage.setItem("tasks", JSON.stringify(tasks));
-
+    renderTask();
     renderNavLinksBadges();
 }
 
@@ -568,7 +595,7 @@ function toggleStatus(taskId) {
     const task = tasks.find(task => task.id === taskId)
     task.status = task.status === "Completed" ? "Ongoing" : "Completed";
     localStorage.setItem("tasks", JSON.stringify(tasks));
-
+    renderTask();
     renderNavLinksBadges();
 }
 
@@ -576,7 +603,7 @@ function toggleFavorite(taskId) {
     const task = tasks.find(task => task.id === taskId)
     task.favorite = !task.favorite;
     localStorage.setItem("tasks", JSON.stringify(tasks));
-
+    renderTask();
     renderNavLinksBadges();
 }
 
