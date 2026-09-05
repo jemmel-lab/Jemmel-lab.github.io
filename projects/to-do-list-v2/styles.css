@@ -557,7 +557,7 @@ header {
         width: 100%;
         margin: 2rem 0;
 
-        .task-list-ul {
+        .task-list-ul, .trash-list-ul {
             width: 100%;
             list-style: none;
 

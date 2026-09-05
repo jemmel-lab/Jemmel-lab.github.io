@@ -2,7 +2,8 @@ lucide.createIcons();
 
 // Notes:
 
-    // Clear all tasks: localStorage.removeItem("trash");
+    // Clear all tasks: 
+    // localStorage.removeItem("trash");
     // Task sample : const newTaskObj = {
                     //     id: crypto.randomUUID(),
                     //     title: title.value,
@@ -92,6 +93,7 @@ navLinks.forEach(navLink => {
         navLink.classList.add("selected");
         selectedNav = navLink.id;
         currentView = views.find(view => view.name === selectedNav);
+
         renderMain(selectedNav);
     });
 });
@@ -319,11 +321,35 @@ taskListUl.addEventListener("click", (e) => {
         if (e.target.closest(".task-checkbox")) {
             const taskLi = document.querySelector(`[data-id="${taskId}"] div`);
             taskLi.classList.toggle("completed");
-            toggleStatus(taskId);
+            toggleStatus(taskId, tasks);
         } else if (e.target.closest(".task-favorite-btn")) {
             const taskLi = document.querySelector(`[data-id="${taskId}"] .task-favorite-btn`);
             taskLi.classList.toggle("favorite");
-            toggleFavorite(taskId);
+            toggleFavorite(taskId, tasks);
+        } else if (e.target.closest(".delete-btn")) {
+            taskElement.remove();
+            deleteTask(taskId);
+        } else {
+            showTaskModal("edit", taskId)
+        }
+    }
+});
+
+const trashListUl = document.querySelector(".trash-list-ul");
+
+trashListUl.addEventListener("click", (e) => {
+    if (e.target.closest(".task")) {
+        const taskElement = e.target.closest(".task");
+        const taskId = taskElement.dataset.id;
+
+        if (e.target.closest(".task-checkbox")) {
+            const taskLi = document.querySelector(`[data-id="${taskId}"] div`);
+            taskLi.classList.toggle("completed");
+            toggleStatus(taskId, trash);
+        } else if (e.target.closest(".task-favorite-btn")) {
+            const taskLi = document.querySelector(`[data-id="${taskId}"] .task-favorite-btn`);
+            taskLi.classList.toggle("favorite");
+            toggleFavorite(taskId, trash);
         } else if (e.target.closest(".delete-btn")) {
             taskElement.remove();
             deleteTask(taskId);
@@ -421,11 +447,18 @@ function renderMain(selectedNav) {
     const header = document.querySelector("header h1");
     header.textContent = currentView.title;
 
-    renderTask()
+    if (selectedNav === "trash-li") {
+        renderTrash();
+    } else {
+        renderTask();
+    }
+
     renderNavLinksBadges();
 }
 
 function renderTask() {
+    const trashListUl = document.querySelector(".trash-list-ul");
+    trashListUl.innerHTML = "";
     const taskListUl = document.querySelector(".task-list-ul");
     taskListUl.innerHTML = "";
 
@@ -465,6 +498,47 @@ function renderTask() {
     renderNavLinksBadges();
     lucide.createIcons();
 };
+
+function renderTrash() {
+    const taskListUl = document.querySelector(".task-list-ul");
+    taskListUl.innerHTML = "";
+    const trashListUl = document.querySelector(".trash-list-ul");
+    trashListUl.innerHTML = "";
+
+    trash.forEach(task => {
+        trashListUl.innerHTML += `
+            <li class="task" data-id="${task.id}">
+                <input type="checkbox" class="task-checkbox" ${task.status === "Completed" ? "checked" : ""}>
+                <div class="task-info ${task.status === "Completed" ? "completed" : ""}">
+                    <span class="task-title">${task.title}</span>
+                    <div>
+                        <span>
+                            <i data-lucide="calendar"></i>
+                            ${task.dueDate}
+                        </span>
+                        <span>
+                            <i data-lucide="flag"></i>
+                            ${task.priority}
+                        </span>
+                        <span>
+                            <i data-lucide="tag"></i>
+                            ${task.category}
+                        </span>
+                    </div>
+                </div>
+                <button type="button" class="task-btn task-favorite-btn ${task.favorite ? "favorite" : ""}">
+                    <i data-lucide="star"></i>
+                </button>
+                <button type="button" class="task-btn delete-btn">
+                    <i data-lucide="trash"></i>
+                </button>
+            </li>
+        `;
+    });
+    
+    renderNavLinksBadges();
+    lucide.createIcons();
+}
 
 function clearTaskModal() {
     const modal = document.querySelector(".modal-content");
@@ -581,6 +655,16 @@ function updateTaskList(taskId) {
 }
 
 function deleteTask(taskId) {
+
+    if (selectedNav === "trash-li") {
+        const taskIndex = trash.findIndex(task => task.id === taskId);
+        trash.splice(taskIndex, 1);
+        localStorage.setItem("trash", JSON.stringify(trash));
+        renderTrash();
+        renderNavLinksBadges();
+        return;
+    }
+
     const task = tasks.find(task => task.id === taskId);
     trash.push(task);
     localStorage.setItem("trash", JSON.stringify(trash));
@@ -591,19 +675,29 @@ function deleteTask(taskId) {
     renderNavLinksBadges();
 }
 
-function toggleStatus(taskId) {
-    const task = tasks.find(task => task.id === taskId)
+function toggleStatus(taskId, taskList) {
+    const task = taskList.find(task => task.id === taskId)
     task.status = task.status === "Completed" ? "Ongoing" : "Completed";
     localStorage.setItem("tasks", JSON.stringify(tasks));
-    renderTask();
+    localStorage.setItem("trash", JSON.stringify(trash));
+    if (selectedNav === "trash-li") {
+        renderTrash();
+    } else {
+        renderTask();
+    }
     renderNavLinksBadges();
 }
 
-function toggleFavorite(taskId) {
-    const task = tasks.find(task => task.id === taskId)
+function toggleFavorite(taskId, taskList) {
+    const task = taskList.find(task => task.id === taskId)
     task.favorite = !task.favorite;
     localStorage.setItem("tasks", JSON.stringify(tasks));
-    renderTask();
+    localStorage.setItem("trash", JSON.stringify(trash));
+    if (selectedNav === "trash-li") {
+        renderTrash();
+    } else {
+        renderTask();
+    }
     renderNavLinksBadges();
 }
 
