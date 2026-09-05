@@ -353,8 +353,6 @@ trashListUl.addEventListener("click", (e) => {
         } else if (e.target.closest(".delete-btn")) {
             taskElement.remove();
             deleteTask(taskId);
-        } else {
-            showTaskModal("edit", taskId)
         }
     }
 });
@@ -626,11 +624,11 @@ function updateTaskList(taskId) {
     const priority = modal.querySelector('input[name="priority-radio"]:checked');
     const category = modal.querySelector('input[name="category-radio"]:checked');
 
-    const status = tasks.find(task => task.id === taskId).status || "Ongoing";
-    const favorite = tasks.find(task => task.id === taskId).favorite || false;
+    const status = tasks.find(task => task.id === taskId)?.status || "Ongoing";
+    const favorite = tasks.find(task => task.id === taskId)?.favorite || false;
 
     const newTaskObj = {
-        id: crypto.randomUUID(),
+        id: taskId || crypto.randomUUID(),
         title: title.value,
         description: description.value,
         dueDate: dueDate,

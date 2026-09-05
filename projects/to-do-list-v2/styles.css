@@ -557,6 +557,17 @@ header {
         width: 100%;
         margin: 2rem 0;
 
+        .task-list-ul {
+            .task {
+                cursor: pointer;
+                transition: all .2s ease;
+
+                &:hover {
+                    transform: scale(1.05);
+                }
+            }
+        }
+
         .task-list-ul, .trash-list-ul {
             width: 100%;
             list-style: none;
@@ -572,12 +583,6 @@ header {
                 display: flex;
                 align-items: center;
                 gap: 1.5rem;
-                cursor: pointer;
-                transition: all .2s ease;
-
-                &:hover {
-                    transform: scale(1.05);
-                }
 
                 .task-checkbox {
                     appearance: none;
