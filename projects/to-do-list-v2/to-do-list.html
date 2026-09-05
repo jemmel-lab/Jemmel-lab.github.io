@@ -83,7 +83,7 @@
                 </div>
             </header>
             <div class="quick-add-task-container add-box-shadow">
-                <input type="text" id="quick-add-task-input" placeholder="What needs to be done?" required>
+                <input type="text" id="quick-add-task-input" maxlength="100" placeholder="What needs to be done?" required>
                 <div class="quick-add-task-controls">
                     <div class="dropdowns-conrainer" id="quick-add-task-dropdown">
                         <div class="dropdown">
@@ -277,11 +277,11 @@
             <div class="task-info">
                 <label for="task-title-input">
                     <span>Title:</span>
-                    <input type="text" class="task-info-inputs" id="task-title-input" placeholder="What needs to be done?" required>
+                    <input type="text" class="task-info-inputs" id="task-title-input" maxlength="100" placeholder="What needs to be done?" required>
                 </label>
                 <label for="task-description-input">
                     <span>Description:</span>
-                    <textarea class="task-info-inputs" id="task-description-input" placeholder="e.g., Fix the navigation bar jumpiness on mobile, verify safari layout compatibility, and deploy patch to staging."></textarea>
+                    <textarea class="task-info-inputs" id="task-description-input" maxlength="500" placeholder="e.g., Fix the navigation bar jumpiness on mobile, verify safari layout compatibility, and deploy patch to staging."></textarea>
                 </label>
             </div>
             <!-- TO-DO color each priority and category -->
