@@ -327,7 +327,6 @@ taskListUl.addEventListener("click", (e) => {
             taskLi.classList.toggle("favorite");
             toggleFavorite(taskId, tasks);
         } else if (e.target.closest(".delete-btn")) {
-            taskElement.remove();
             deleteTask(taskId);
         } else {
             showTaskModal("edit", taskId)
@@ -351,7 +350,6 @@ trashListUl.addEventListener("click", (e) => {
             taskLi.classList.toggle("favorite");
             toggleFavorite(taskId, trash);
         } else if (e.target.closest(".delete-btn")) {
-            taskElement.remove();
             deleteTask(taskId);
         }
     }
