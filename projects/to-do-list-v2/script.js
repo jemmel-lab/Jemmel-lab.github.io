@@ -83,6 +83,9 @@ const navLinks = document.querySelectorAll(".nav-link");
 let selectedNav = "all-task-li";
 let currentView = views.find(view => view.name === selectedNav);
 
+// For status select when in all-task-li(All Task)
+let selectedStatus = "All";
+
 renderMain(selectedNav);
 renderNavLinksBadges();
 
@@ -95,6 +98,8 @@ navLinks.forEach(navLink => {
         selectedNav = navLink.id;
         currentView = views.find(view => view.name === selectedNav);
 
+        document.getElementById("search-input").value = "";
+        textToSearch = "";
         renderMain(selectedNav);
     });
 });
@@ -294,6 +299,7 @@ quickAddTaskBtn.addEventListener("click", () => {
     document.getElementById("task-modal").classList.remove("active");
     renderTask();
 
+    document.querySelector(".due-date-radio [name='due-date-radio']").checked = true;
     selectedDate = "None";
     dueDate.textContent = "Due Date";
     dueDateBtn.style.color = "var(--color-text-muted)";
@@ -365,6 +371,8 @@ statusButtons.forEach(btn => {
             btn.classList.remove("selected");
         });
         btn.classList.add("selected");
+        selectedStatus = btn.textContent.trim();
+        renderTask();
     });
 });
 
@@ -463,6 +471,14 @@ function renderTask() {
 
     if (textToSearch) {
         filteredTask = filteredTask.filter(task => task.title.toLowerCase().includes(textToSearch.toLowerCase()));
+    }
+
+    if (currentView.name === "all-task-li") {
+        if (selectedStatus === "Completed") {
+            filteredTask = filteredTask.filter(task => task.status === "Completed");
+        } else if (selectedStatus === "Ongoing") {
+            filteredTask = filteredTask.filter(task => task.status === "Ongoing");
+        }
     }
 
     filteredTask.forEach(task => {
