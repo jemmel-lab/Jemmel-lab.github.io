@@ -45,6 +45,7 @@ const formattedTomorrow = formatDate(tomorrow);
 
 // Navigation and Main ↓
 
+let textToSearch = "";
 const views = [
     {
         name: "all-task-li",
@@ -106,16 +107,16 @@ const searchForm = document.getElementById("search-form");
 const searchInput = document.getElementById("search-input");
 const searchBtn = document.getElementById("search-btn");
 
-searchForm.addEventListener("submit", () => {
-    searchTask(searchInput.value)
+searchForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    textToSearch = searchInput.value;
+    if (selectedNav === "trash-li") {
+        renderTrash();
+    } else {
+        renderTask();
+    }
+    textToSearch = "";
 });
-searchBtn.addEventListener("click", () => {
-    searchTask(searchInput.value)
-});
-
-function searchTask(input) {
-    alert(input)
-}
 
 // Search ↑
 
@@ -460,6 +461,10 @@ function renderTask() {
 
     let filteredTask = tasks.filter(currentView.filter);
 
+    if (textToSearch) {
+        filteredTask = filteredTask.filter(task => task.title.toLowerCase().includes(textToSearch.toLowerCase()));
+    }
+
     filteredTask.forEach(task => {
         taskListUl.innerHTML += `
             <li class="task" data-id="${task.id}">
@@ -501,7 +506,13 @@ function renderTrash() {
     const trashListUl = document.querySelector(".trash-list-ul");
     trashListUl.innerHTML = "";
 
-    trash.forEach(task => {
+    let filteredTask = trash;
+
+    if (textToSearch) {
+        filteredTask = filteredTask.filter(task => task.title.toLowerCase().includes(textToSearch.toLowerCase()));
+    }
+
+    filteredTask.forEach(task => {
         trashListUl.innerHTML += `
             <li class="task" data-id="${task.id}">
                 <input type="checkbox" class="task-checkbox" ${task.status === "Completed" ? "checked" : ""}>
