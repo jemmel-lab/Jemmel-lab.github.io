@@ -9,6 +9,7 @@ lucide.createIcons();
                     //     title: title.value,
                     //     description: description.value,
                     //     dueDate: dueDate,
+                    //     dateAdded: current date,
                     //     priority: priority.value,
                     //     category: category.value,
                     //     favorite: false,
@@ -79,12 +80,64 @@ const views = [
     }
 ];
 
+const sortOption = [
+    {
+        name: "Due Date",
+        sort: (a, b) => {
+            if ((a.dueDate === "None" && b.dueDate === "None")) return 0;
+            if ((a.dueDate === "None")) return 1;
+            if ((b.dueDate === "None")) return -1;
+
+            const [monthA, dayA, yearA] = a.dueDate.split("/");
+            const [monthB, dayB, yearB] = b.dueDate.split("/");
+            const dateA = new Date(yearA, monthA - 1, dayA);
+            const dateB = new Date(yearB, monthB - 1, dayB);
+
+            return dateA - dateB
+        }
+    },
+    {
+        name: "Date Added",
+        sort: (a, b) => {
+            const [monthA, dayA, yearA] = a.dateAdded.split("/");
+            const [monthB, dayB, yearB] = b.dateAdded.split("/");
+            const dateA = new Date(yearA, monthA - 1, dayA);
+            const dateB = new Date(yearB, monthB - 1, dayB);
+
+            return dateA - dateB;
+        }
+    },
+    {
+        name: "Alphabetical",
+        sort: (a, b) => {
+            return a.title.localeCompare(b.title);
+        }
+    },
+    {
+        name: "Priority",
+        sort: (a, b) => {
+            const priorityOrder = ["High", "Medium", "Low", "None"];
+            return priorityOrder.indexOf(a.priority) - priorityOrder.indexOf(b.priority);
+        }
+    },
+    {
+        name: "Category",
+        sort: (a, b) => {
+            const categoryOrder = ["Work", "Study", "Personal", "Other", "None"];
+            return categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category);
+        }
+    }
+];
+
 const navLinks = document.querySelectorAll(".nav-link");
 let selectedNav = "all-task-li";
 let currentView = views.find(view => view.name === selectedNav);
 
 // For status select when in all-task-li(All Task)
 let selectedStatus = "All";
+// For sorting via selected option\
+let selectedSortingOption = "Due Date";
+let currentSort = sortOption.find(sort => sort.name === selectedSortingOption);
 
 renderMain(selectedNav);
 renderNavLinksBadges();
@@ -288,6 +341,7 @@ quickAddTaskBtn.addEventListener("click", () => {
         title: quickAddTaskTitle.value,
         description: "None",
         dueDate: selectedDate,
+        dateAdded: formatDate(new Date()),
         priority: selectedPriority,
         category: selectedCategory,
         favorite: false,
@@ -392,12 +446,14 @@ sortDropdownMenuBtns.forEach(btn => {
         ascendingDescendingBtn.querySelector("span").textContent = sortBy;
         sortDropdownMenu.classList.remove("active");
         icon.classList.remove("descending");
+        selectedSortingOption = sortBy;
+        currentSort = sortOption.find(sort => sort.name === selectedSortingOption);
+        renderTask();
     });
 });
 
 ascendingDescendingBtn.addEventListener("click", () => {
     icon.classList.toggle("descending");
-
 });
 
 const listDisplayBtn = document.querySelector(".list-display-controls");
@@ -481,7 +537,9 @@ function renderTask() {
         }
     }
 
-    filteredTask.forEach(task => {
+    const sortedTask = filteredTask.sort(currentSort.sort);
+
+    sortedTask.forEach(task => {
         taskListUl.innerHTML += `
             <li class="task" data-id="${task.id}">
                 <input type="checkbox" class="task-checkbox" ${task.status === "Completed" ? "checked" : ""}>
@@ -657,6 +715,7 @@ function updateTaskList(taskId) {
         title: title.value,
         description: description.value,
         dueDate: dueDate,
+        dateAdded: formatDate(new Date()),
         priority: priority.value,
         category: category.value,
         favorite: favorite,
