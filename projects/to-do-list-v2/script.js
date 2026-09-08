@@ -138,6 +138,8 @@ let selectedStatus = "All";
 // For sorting via selected option\
 let selectedSortingOption = "Due Date";
 let currentSort = sortOption.find(sort => sort.name === selectedSortingOption);
+// For Ascending and Descending order of task
+let isListAscending = true;
 
 renderMain(selectedNav);
 renderNavLinksBadges();
@@ -434,7 +436,6 @@ const sortDropdownBtn = document.querySelector(".sort-dropdown-btn");
 const sortDropdownMenu = document.querySelector(".sort-dropdown-menu");
 const sortDropdownMenuBtns = sortDropdownMenu.querySelectorAll("button");
 const ascendingDescendingBtn = document.querySelector(".ascending-descending");
-const icon = ascendingDescendingBtn.querySelector("svg");
 
 sortDropdownBtn.addEventListener("click", () => {
     sortDropdownMenu.classList.toggle("active");
@@ -445,15 +446,27 @@ sortDropdownMenuBtns.forEach(btn => {
         const sortBy = btn.querySelector("span").textContent;
         ascendingDescendingBtn.querySelector("span").textContent = sortBy;
         sortDropdownMenu.classList.remove("active");
-        icon.classList.remove("descending");
+        ascendingDescendingBtn.querySelector("svg").classList.remove("descending");
+        isListAscending = true;
         selectedSortingOption = sortBy;
         currentSort = sortOption.find(sort => sort.name === selectedSortingOption);
-        renderTask();
+        if (selectedNav === "trash-li") {
+        renderTrash();
+        } else {
+            renderTask();
+        }
     });
 });
 
 ascendingDescendingBtn.addEventListener("click", () => {
+    const icon = ascendingDescendingBtn.querySelector("svg");
     icon.classList.toggle("descending");
+    isListAscending = !isListAscending;
+    if (selectedNav === "trash-li") {
+        renderTrash();
+    } else {
+        renderTask();
+    }
 });
 
 const listDisplayBtn = document.querySelector(".list-display-controls");
@@ -539,6 +552,10 @@ function renderTask() {
 
     const sortedTask = filteredTask.sort(currentSort.sort);
 
+    if (!isListAscending) {
+        sortedTask.reverse();
+    }
+
     sortedTask.forEach(task => {
         taskListUl.innerHTML += `
             <li class="task" data-id="${task.id}">
@@ -586,7 +603,13 @@ function renderTrash() {
         filteredTask = filteredTask.filter(task => task.title.toLowerCase().includes(textToSearch.toLowerCase()));
     }
 
-    filteredTask.forEach(task => {
+    const sortedTask = filteredTask.sort(currentSort.sort);
+
+    if (!isListAscending) {
+        sortedTask.reverse();
+    }
+
+    sortedTask.forEach(task => {
         trashListUl.innerHTML += `
             <li class="task" data-id="${task.id}">
                 <input type="checkbox" class="task-checkbox" ${task.status === "Completed" ? "checked" : ""}>
