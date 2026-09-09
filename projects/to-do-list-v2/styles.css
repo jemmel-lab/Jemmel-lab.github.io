@@ -841,7 +841,56 @@ header {
             }
         }
     }
-    &.active {
+}
+
+#confirmation-modal {
+    display: none;
+
+    .modal-content {
+        width: 300px;
+        background-color: var(--color-bg-secondary);
+        padding: 2rem 3rem;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+
+        h3 {
+            margin: 0;
+        }
+
+        .buttons {
+
+            margin-top: 20px;
+
+            button {
+                margin: 0 10px;
+                padding: .5rem 1rem;
+                border: none;
+                border-radius: 5px;
+                font-size: 1.8rem;
+                cursor: pointer;
+                transition: transform 0.15s ease, filter 0.15s ease;
+            }
+            button:hover {
+                transform: translateY(-2px);
+                filter: brightness(1.1);
+            }
+            button:active {
+                transform: translateY(0);
+            }
+            #cancel-btn {
+                background-color: var(--color-info);
+            }
+            #confirm-btn {
+                background-color: var(--color-success);
+            }
+        }
+    }
+}
+
+#task-modal.active, #confirmation-modal.active {
         display: flex;
         position: fixed;
         top: 0;
@@ -854,7 +903,6 @@ header {
         backdrop-filter: blur(1px);
         z-index: 100;
     }
-}
 
 /* Footer */
 
