@@ -44,6 +44,55 @@ const formattedTomorrow = formatDate(tomorrow);
 
 // Setting Dates ↑
 
+// Confirmation Modal ↓
+
+const confirmationModal = [
+    {
+        name: "delete",
+        message: "Delete Task: ",
+        additionalMessage: "Task will be moved to Trash",
+        action: deleteTask,
+        confirmBtn: {
+            text: "Delete",
+            color: "var(--color-danger)"
+        },
+        cancelBtn: {
+            text: "Cancel",
+            color: "var(--color-info)"
+        }
+    },
+    {
+        name: "delete permanent",
+        message: "Delete Task: ",
+        additionalMessage: "This action cannot be undone",
+        action: deleteTask,
+        confirmBtn: {
+            text: "Delete",
+            color: "var(--color-danger)"
+        },
+        cancelBtn: {
+            text: "Cancel",
+            color: "var(--color-info)"
+        }
+    },
+    {
+        name: "edit",
+        message: "Edit Task: ",
+        additionalMessage: "",
+        action: updateTaskList,
+        confirmBtn: {
+            text: "Save",
+            color: "var(--color-success)"
+        },
+        cancelBtn: {
+            text: "Cancel",
+            color: "var(--color-info)"
+        }
+    }
+];
+
+// Confirmation Modal ↑
+
 // Navigation and Main ↓
 
 let textToSearch = "";
@@ -390,7 +439,7 @@ taskListUl.addEventListener("click", (e) => {
             taskLi.classList.toggle("favorite");
             toggleFavorite(taskId, tasks);
         } else if (e.target.closest(".delete-btn")) {
-            deleteTask(taskId);
+            showConfirmationModal(taskId, "delete");
         } else {
             showTaskModal("edit", taskId)
         }
@@ -413,7 +462,7 @@ trashListUl.addEventListener("click", (e) => {
             taskLi.classList.toggle("favorite");
             toggleFavorite(taskId, trash);
         } else if (e.target.closest(".delete-btn")) {
-            deleteTask(taskId);
+            showConfirmationModal(taskId, "delete permanent");
         }
     }
 });
@@ -684,11 +733,9 @@ function showTaskModal(type, taskId) {
 
         const deleteBtn = modal.querySelector("#delete-btn");
         deleteBtn.onclick = () => {
-            deleteTask(taskId);
+            showConfirmationModal(taskId, "delete");
             clearTaskModal();
             document.getElementById("task-modal").classList.remove("active");
-            const taskLi = document.querySelector(`[data-id="${taskId}"]`);
-            taskLi.remove();
         };
         confirmBtn.querySelector("span").textContent = "Edit Task";
         confirmBtn.onclick = () => {
@@ -713,6 +760,31 @@ function showTaskModal(type, taskId) {
                 updateTaskList();
             }
         };
+    }
+}
+
+function showConfirmationModal(taskId, type) {
+    const modal = document.getElementById("confirmation-modal");
+    modal.classList.add("active");
+    const modalInfo = confirmationModal.find(confirmation => confirmation.name === type);
+    const task = tasks.find(task => task.id === taskId) || trash.find(task => task.id === taskId);
+    const taskName = task.title.length <= 10 ? task.title : `${task.title.slice(0, 10)}...`;
+
+    modal.querySelector("div h3").textContent = `${modalInfo.message}${taskName}`;
+    modal.querySelector("div p").textContent = modalInfo.additionalMessage;
+
+    const confirmBtn = modal.querySelector("#confirm-btn");
+    const cancelBtn = modal.querySelector("#cancel-btn");
+
+    confirmBtn.textContent = modalInfo.confirmBtn.text;
+    confirmBtn.style.backgroundColor = modalInfo.confirmBtn.color;
+
+    confirmBtn.onclick = () => {
+        modalInfo.action(taskId);
+        modal.classList.remove("active");
+    }
+    cancelBtn.onclick = () => {
+        modal.classList.remove("active");
     }
 }
 
@@ -794,7 +866,7 @@ function toggleStatus(taskId, taskList) {
 }
 
 function toggleFavorite(taskId, taskList) {
-    const task = taskList.find(task => task.id === taskId)
+    const task = taskList.find(task => task.id === taskId);
     task.favorite = !task.favorite;
     localStorage.setItem("tasks", JSON.stringify(tasks));
     localStorage.setItem("trash", JSON.stringify(trash));
