@@ -3,7 +3,7 @@ lucide.createIcons();
 // Notes:
 
     // Clear all tasks: 
-    // localStorage.removeItem("trash");
+    // localStorage.removeItem("tasks");
     // Task sample : const newTaskObj = {
                     //     id: crypto.randomUUID(),
                     //     title: title.value,
@@ -739,7 +739,17 @@ function showTaskModal(type, taskId) {
         };
         confirmBtn.querySelector("span").textContent = "Edit Task";
         confirmBtn.onclick = () => {
-            updateTaskList(taskId);
+            const taskObj = getTaskInfoFromModal(taskId);
+            const task = tasks.find(task => task.id === taskId);
+
+            const same = Object.keys(taskObj).every(key => taskObj[key] === task[key]);
+
+            if (same) {
+                clearTaskModal();
+                document.getElementById("task-modal").classList.remove("active");
+            } else {
+                showConfirmationModal(taskObj, "edit");
+            }
         };
 
     } else {
@@ -757,7 +767,9 @@ function showTaskModal(type, taskId) {
             if (!titleInput.checkValidity()) {
                 titleInput.reportValidity();
             } else {
-                updateTaskList();
+                const taskObj = getTaskInfoFromModal(taskId);
+                console.log(taskObj)
+                updateTaskList(taskObj);
             }
         };
     }
@@ -767,7 +779,13 @@ function showConfirmationModal(taskId, type) {
     const modal = document.getElementById("confirmation-modal");
     modal.classList.add("active");
     const modalInfo = confirmationModal.find(confirmation => confirmation.name === type);
-    const task = tasks.find(task => task.id === taskId) || trash.find(task => task.id === taskId);
+    let task = "";
+    if (typeof taskId === "object") {
+        task = taskId;
+    } else {
+        task = tasks.find(task => task.id === taskId) || trash.find(task => task.id === taskId);
+    }
+    
     const taskName = task.title.length <= 10 ? task.title : `${task.title.slice(0, 10)}...`;
 
     modal.querySelector("div h3").textContent = `${modalInfo.message}${taskName}`;
@@ -788,7 +806,23 @@ function showConfirmationModal(taskId, type) {
     }
 }
 
-function updateTaskList(taskId) {
+function updateTaskList(taskObj) {
+    const taskIndex = tasks.findIndex(task => task.id === taskObj.id);
+
+    if (taskIndex !== -1) {
+        tasks[taskIndex] = taskObj;
+    } else {
+        tasks.push(taskObj);
+    }
+
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    document.getElementById("task-modal").classList.remove("active");
+    renderTask();
+    clearTaskModal();
+    renderNavLinksBadges();
+}
+
+function getTaskInfoFromModal(taskId) {
     const modal = document.querySelector(".modal-content");
     const title = modal.querySelector("#task-title-input");
     const description = modal.querySelector("#task-description-input");
@@ -805,30 +839,17 @@ function updateTaskList(taskId) {
     const status = tasks.find(task => task.id === taskId)?.status || "Ongoing";
     const favorite = tasks.find(task => task.id === taskId)?.favorite || false;
 
-    const newTaskObj = {
+    return {
         id: taskId || crypto.randomUUID(),
         title: title.value,
         description: description.value,
         dueDate: dueDate,
-        dateAdded: formatDate(new Date()),
+        dateAdded: tasks.find(task => task.id === taskId)?.dateAdded || formatDate(new Date()),
         priority: priority.value,
         category: category.value,
         favorite: favorite,
         status: status
     }
-
-    const taskIndex = tasks.findIndex(task => task.id === taskId);
-    if (taskIndex !== -1) {
-        tasks[taskIndex] = newTaskObj;
-    } else {
-        tasks.push(newTaskObj);
-    }
-
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-    document.getElementById("task-modal").classList.remove("active");
-    renderTask();
-    clearTaskModal();
-    renderNavLinksBadges();
 }
 
 function deleteTask(taskId) {
