@@ -48,7 +48,7 @@ const formattedTomorrow = formatDate(tomorrow);
 
 const confirmationModal = [
     {
-        name: "delete",
+        name: "trash",
         message: "Delete Task: ",
         additionalMessage: "Task will be moved to Trash",
         action: deleteTask,
@@ -209,6 +209,56 @@ navLinks.forEach(navLink => {
 });
 
 // Navigation and Main ↑
+
+
+// Notification ↓
+
+const notifications = [
+
+    {
+        name: "add",
+        message: "Task added successfully",
+        color: "var(--color-success)"
+    },
+    {
+        name: "edit",
+        message: "Task edited successfully",
+        color: "var(--color-info)"
+    },
+    {
+        name: "trash",
+        message: "Task moved to trash",
+        color: "var(--color-warning)"
+    },
+    {
+        name: "delete",
+        message: "Task deleted successfully",
+        color: "var(--color-danger)"
+    },
+    {
+        name: "clear",
+        message: "Trash cleared",
+        color: "var(--color-danger)"
+    },
+    {
+        name: "favorite",
+        message: "Task added to favorites",
+        color: "var(--color-info)"
+    },
+    {
+        name: "done",
+        message: "Task marked as done",
+        color: "var(--color-success)"
+    },
+    {
+        name: "undone",
+        message: "Task marked as not done",
+        color: "var(--color-info)"
+    },
+
+];
+
+// Notofication ↑
 
 // Search ↓
 
@@ -439,7 +489,7 @@ taskListUl.addEventListener("click", (e) => {
             taskLi.classList.toggle("favorite");
             toggleFavorite(taskId, tasks);
         } else if (e.target.closest(".delete-btn")) {
-            showConfirmationModal(taskId, "delete");
+            showConfirmationModal(taskId, "trash");
         } else {
             showTaskModal("edit", taskId)
         }
@@ -733,7 +783,7 @@ function showTaskModal(type, taskId) {
 
         const deleteBtn = modal.querySelector("#delete-btn");
         deleteBtn.onclick = () => {
-            showConfirmationModal(taskId, "delete");
+            showConfirmationModal(taskId, "trash");
             clearTaskModal();
             document.getElementById("task-modal").classList.remove("active");
         };
@@ -897,6 +947,10 @@ function toggleFavorite(taskId, taskList) {
         renderTask();
     }
     renderNavLinksBadges();
+}
+
+function notifyUser(taskId, type) {
+    const notificationInfo = notifications.find(notif => notif.name === type);
 }
 
 function formatDate(date) {

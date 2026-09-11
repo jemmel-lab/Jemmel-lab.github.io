@@ -891,18 +891,32 @@ header {
 }
 
 #task-modal.active, #confirmation-modal.active {
-        display: flex;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        justify-content: center;
-        align-items: center;
-        background-color: rgba(0,0,0,.5);
-        backdrop-filter: blur(1px);
-        z-index: 100;
-    }
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,.5);
+    backdrop-filter: blur(1px);
+    z-index: 100;
+}
+
+/* Notifications */
+
+.notifications {
+    pointer-events: none;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    width: 300px;
+    height: 500px;
+
+    border: 1px solid white;
+}
 
 /* Footer */
 
