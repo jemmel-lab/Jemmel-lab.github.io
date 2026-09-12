@@ -571,6 +571,29 @@ header {
         .task-list-ul, .trash-list-ul {
             width: 100%;
             list-style: none;
+            display: flex;
+            flex-direction: column;
+
+            #clear-trash-btn {
+                align-self: flex-end;
+                padding: .5rem 1rem;
+                border-radius: 5px;
+                border: none;
+                font-size: 1.7rem;
+                font-weight: bold;
+                color: var(--color-bg);
+                cursor: pointer;
+                transition: all .3s ease;
+                background-color: var(--color-danger);
+
+                &:hover {
+                    transform: translateY(-2px);
+                    filter: brightness(1.1);
+                }
+                &:active {
+                    transform: translateY(0);
+                }
+            }
 
             .task {
                 position: relative;
@@ -657,6 +680,9 @@ header {
                 }
                 .delete-btn {
                     color: var(--color-danger);
+                }
+                .restore-btn {
+                    color: var(--color-info);
                 }
             }
         }

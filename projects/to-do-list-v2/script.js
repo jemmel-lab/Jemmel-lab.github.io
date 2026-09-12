@@ -22,7 +22,6 @@ const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 const trash = JSON.parse(localStorage.getItem("trash")) || [];
     // localStorage.setItem("tasks", JSON.stringify(tasks));
 
-
 // Close dropdown menu's
 document.addEventListener("click", (e) => {
     if (!e.target.closest(".dropdown")) {
@@ -68,6 +67,20 @@ const confirmationModal = [
         action: deleteTask,
         confirmBtn: {
             text: "Delete",
+            color: "var(--color-danger)"
+        },
+        cancelBtn: {
+            text: "Cancel",
+            color: "var(--color-info)"
+        }
+    },
+    {
+        name: "clear",
+        message: "Clear all trash?",
+        additionalMessage: "This action cannot be undone",
+        action: clearTrash,
+        confirmBtn: {
+            text: "Clear",
             color: "var(--color-danger)"
         },
         cancelBtn: {
@@ -229,6 +242,11 @@ const notifications = [
         name: "trash",
         message: "Task moved to trash",
         color: "var(--color-warning)"
+    },
+    {
+        name: "restore",
+        message: "Task successfully restored",
+        color: "var(--color-success)"
     },
     {
         name: "delete",
@@ -503,17 +521,17 @@ trashListUl.addEventListener("click", (e) => {
         const taskElement = e.target.closest(".task");
         const taskId = taskElement.dataset.id;
 
-        if (e.target.closest(".task-checkbox")) {
-            const taskLi = document.querySelector(`[data-id="${taskId}"] div`);
-            taskLi.classList.toggle("completed");
-            toggleStatus(taskId, trash);
-        } else if (e.target.closest(".task-favorite-btn")) {
+        if (e.target.closest(".task-favorite-btn")) {
             const taskLi = document.querySelector(`[data-id="${taskId}"] .task-favorite-btn`);
             taskLi.classList.toggle("favorite");
             toggleFavorite(taskId, trash);
         } else if (e.target.closest(".delete-btn")) {
             showConfirmationModal(taskId, "delete permanent");
-        }
+        } else if (e.target.closest(".restore-btn")) {
+            restoreTask(taskId);
+        } 
+    } else if (e.target.closest("#clear-trash-btn")) {
+        showConfirmationModal(undefined, "clear");
     }
 });
 
@@ -696,7 +714,15 @@ function renderTrash() {
     const trashListUl = document.querySelector(".trash-list-ul");
     trashListUl.innerHTML = "";
 
-    let filteredTask = trash;
+    if (trash.length !== 0) {
+        trashListUl.innerHTML = `
+            <button type="button" id="clear-trash-btn">
+                Clear Trash
+            </button>
+        `;
+    }
+
+    let filteredTask = [...trash];
 
     if (textToSearch) {
         filteredTask = filteredTask.filter(task => task.title.toLowerCase().includes(textToSearch.toLowerCase()));
@@ -711,7 +737,9 @@ function renderTrash() {
     sortedTask.forEach(task => {
         trashListUl.innerHTML += `
             <li class="task" data-id="${task.id}">
-                <input type="checkbox" class="task-checkbox" ${task.status === "Completed" ? "checked" : ""}>
+                <button type="button" class="task-btn restore-btn">
+                    <i data-lucide="undo"></i>
+                </button>
                 <div class="task-info ${task.status === "Completed" ? "completed" : ""}">
                     <span class="task-title">${task.title}</span>
                     <div>
@@ -757,9 +785,9 @@ function showTaskModal(type, taskId) {
     const modal = document.querySelector(".modal-content");
     const confirmBtn = modal.querySelector("#confirm-btn");
     const cancelBtn = modal.querySelector("#cancel-btn");
-    cancelBtn.addEventListener("click", () => {
+    cancelBtn.onclick = () => {
         document.getElementById("task-modal").classList.remove("active");
-    });
+    };
 
     if (type === "edit") {
         modal.querySelector("h2").textContent = "Edit task";
@@ -832,8 +860,20 @@ function showConfirmationModal(taskId, type) {
     let task = "";
     if (typeof taskId === "object") {
         task = taskId;
-    } else {
+    } else if (taskId) {
         task = tasks.find(task => task.id === taskId) || trash.find(task => task.id === taskId);
+    } else {
+        task = {
+                    id: "",
+                    title: "",
+                    description: "",
+                    dueDate: "",
+                    dateAdded: "",
+                    priority: "",
+                    category: "",
+                    favorite: "",
+                    status: ""
+                }
     }
     
     const taskName = task.title.length <= 10 ? task.title : `${task.title.slice(0, 10)}...`;
@@ -914,12 +954,33 @@ function deleteTask(taskId) {
     }
 
     const task = tasks.find(task => task.id === taskId);
+    if (!task) return;
     trash.push(task);
     localStorage.setItem("trash", JSON.stringify(trash));
     const taskIndex = tasks.findIndex(task => task.id === taskId);
     tasks.splice(taskIndex, 1);
     localStorage.setItem("tasks", JSON.stringify(tasks));
     renderTask();
+    renderNavLinksBadges();
+}
+
+function clearTrash() {
+    trash.length = 0;
+    localStorage.setItem("trash", JSON.stringify(trash));
+    renderTrash();
+    renderNavLinksBadges();
+}
+
+function restoreTask(taskId) {
+
+    const task = trash.find(task => task.id === taskId);
+    if (!task) return;
+    tasks.push(task);
+    const taskIndex = trash.findIndex(task => task.id === taskId);
+    trash.splice(taskIndex, 1);
+    localStorage.setItem("trash", JSON.stringify(trash));
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    renderTrash();
     renderNavLinksBadges();
 }
 
