@@ -264,6 +264,11 @@ const notifications = [
         color: "var(--color-info)"
     },
     {
+        name: "unfavorite",
+        message: "Task removed from favorites",
+        color: "var(--color-info)"
+    },
+    {
         name: "done",
         message: "Task marked as done",
         color: "var(--color-success)"
