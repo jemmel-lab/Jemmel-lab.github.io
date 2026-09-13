@@ -634,6 +634,14 @@ header {
                     flex-grow: 1;
                     font-size: 1.8rem;
 
+                    .task-title {
+                        display: block;
+                        width: 100%;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+
                     div {
                         display: flex;
 
@@ -738,6 +746,13 @@ header {
                         grid-row: 2;
                         margin: 0;
                     }
+                }
+
+                #clear-trash-btn {
+                    grid-column: 1 / -1;
+                    grid-row: 1;
+                    justify-self: end;
+                    margin-bottom: 1rem;
                 }
             }
         }

@@ -227,7 +227,7 @@
                     </div>
                 </div>
                 <div class="task-list">
-                    <ul class="task-list-ul grid">
+                    <ul class="task-list-ul">
                         <!-- <li class="task" data-id="${task.id}">
                             <input type="checkbox" class="task-checkbox" ${task.status === "Completed" ? "checked" : ""}>
                             <div class="task-info ${task.status === "Completed" ? "completed" : ""}">
@@ -255,8 +255,38 @@
                             </button>
                         </li> -->
                     </ul>
-                    <ul class="trash-list-ul grid">
-
+                    <ul class="trash-list-ul">
+                        <!-- <button type="button" id="clear-trash-btn">
+                            Clear Trash
+                        </button> -->
+                        <!-- <li class="task" data-id="${task.id}">
+                            <button type="button" class="task-btn restore-btn">
+                                <i data-lucide="undo"></i>
+                            </button>
+                            <div class="task-info ${task.status === "Completed" ? "completed" : ""}">
+                                <span class="task-title">${taskTitle}</span>
+                                <div>
+                                    <span>
+                                        <i data-lucide="calendar"></i>
+                                        ${task.dueDate}
+                                    </span>
+                                    <span>
+                                        <i data-lucide="flag"></i>
+                                        ${task.priority}
+                                    </span>
+                                    <span>
+                                        <i data-lucide="tag"></i>
+                                        ${task.category}
+                                    </span>
+                                </div>
+                            </div>
+                            <button type="button" class="task-btn task-favorite-btn ${task.favorite ? "favorite" : ""}">
+                                <i data-lucide="star"></i>
+                            </button>
+                            <button type="button" class="task-btn delete-btn">
+                                <i data-lucide="trash"></i>
+                            </button>
+                        </li> -->
                     </ul>
                 </div>
             </div>

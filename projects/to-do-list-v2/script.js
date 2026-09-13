@@ -14,7 +14,7 @@
                     //     status: "Ongoing"
                     // }
 
-// State
+// Configuration
 
 const confirmationModal = [
     {
@@ -233,7 +233,7 @@ tomorrow.setDate(tomorrow.getDate() + 1);
 const formattedToday = formatDate(today);
 const formattedTomorrow = formatDate(tomorrow);
 
-    // ---- Others
+    // ---- State
 let textToSearch = "";
 let selectedNav = "all-task-li";
 let selectedSortingOption = "Due Date";
@@ -461,11 +461,12 @@ function renderTask() {
     }
 
     sortedTask.forEach(task => {
+        const taskTitle = task.title.length < 30 ? task.title : `${task.title.slice(0, 30)}...`;
         taskListUl.innerHTML += `
             <li class="task" data-id="${task.id}">
                 <input type="checkbox" class="task-checkbox" ${task.status === "Completed" ? "checked" : ""}>
                 <div class="task-info ${task.status === "Completed" ? "completed" : ""}">
-                    <span class="task-title">${task.title}</span>
+                    <span class="task-title">${taskTitle}</span>
                     <div>
                         <span>
                             <i data-lucide="calendar"></i>
@@ -521,13 +522,14 @@ function renderTrash() {
     }
 
     sortedTask.forEach(task => {
+        const taskTitle = task.title.length < 30 ? task.title : `${task.title.slice(0, 30)}...`;
         trashListUl.innerHTML += `
             <li class="task" data-id="${task.id}">
                 <button type="button" class="task-btn restore-btn">
                     <i data-lucide="undo"></i>
                 </button>
                 <div class="task-info ${task.status === "Completed" ? "completed" : ""}">
-                    <span class="task-title">${task.title}</span>
+                    <span class="task-title">${taskTitle}</span>
                     <div>
                         <span>
                             <i data-lucide="calendar"></i>
@@ -825,10 +827,14 @@ ascendingDescendingBtn.addEventListener("click", () => {
 listDisplayBtn.addEventListener("click", () => {
     listDisplayBtn.classList.add("selected");
     gridDisplayBtn.classList.remove("selected");
+    taskListUl.classList.remove("grid");
+    trashListUl.classList.remove("grid");
 });
 gridDisplayBtn.addEventListener("click", () => {
     gridDisplayBtn.classList.add("selected");
     listDisplayBtn.classList.remove("selected");
+    taskListUl.classList.add("grid");
+    trashListUl.classList.add("grid");
 });
 
 
