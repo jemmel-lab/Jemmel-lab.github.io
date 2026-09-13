@@ -934,14 +934,47 @@ header {
 
 .notifications {
     pointer-events: none;
-    position: absolute;
-    bottom: 0;
-    right: 0;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 
-    width: 300px;
-    height: 500px;
+    .notification-card {
+        box-sizing: border-box;
+        width:300px;
+        height: 80px;
+        background-color: var(--color-bg-secondary);
+        padding-left: 2rem;
+        border-radius: 10px;
 
-    border: 1px solid white;
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+
+        span {
+            display: flex;
+            align-items: center;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        opacity: 0;
+        transform: translateX(300px);
+        pointer-events: none;
+        transition:
+            opacity 0.3s ease,
+            transform 0.3s ease;
+
+        &.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+    }
 }
 
 /* Footer */

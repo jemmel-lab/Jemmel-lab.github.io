@@ -226,56 +226,67 @@ navLinks.forEach(navLink => {
 
 // Notification ↓
 
+let notificationContainer = document.querySelector(".notifications");
 const notifications = [
 
     {
         name: "add",
         message: "Task added successfully",
+        icon: "circle-check",
         color: "var(--color-success)"
     },
     {
         name: "edit",
         message: "Task edited successfully",
+        icon: "circle-alert",
         color: "var(--color-info)"
     },
     {
         name: "trash",
         message: "Task moved to trash",
+        icon: "trash",
         color: "var(--color-warning)"
     },
     {
         name: "restore",
         message: "Task successfully restored",
+        icon: "circle-check",
         color: "var(--color-success)"
     },
     {
         name: "delete",
         message: "Task deleted successfully",
+        icon: "trash",
         color: "var(--color-danger)"
     },
     {
         name: "clear",
         message: "Trash cleared",
+        icon: "trash",
         color: "var(--color-danger)"
     },
     {
         name: "favorite",
         message: "Task added to favorites",
+        icon: "star",
         color: "var(--color-info)"
     },
     {
         name: "unfavorite",
         message: "Task removed from favorites",
+        icon: "circle-alert",
         color: "var(--color-info)"
     },
     {
         name: "done",
         message: "Task marked as done",
+        icon: "circle-check",
         color: "var(--color-success)"
     },
     {
         name: "undone",
         message: "Task marked as not done",
+        icon: "circle-alert",
         color: "var(--color-info)"
     },
 
@@ -476,6 +487,7 @@ quickAddTaskBtn.addEventListener("click", () => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
     document.getElementById("task-modal").classList.remove("active");
     renderTask();
+    notifyUser("add");
 
     document.querySelector(".due-date-radio [name='due-date-radio']").checked = true;
     selectedDate = "None";
@@ -851,7 +863,6 @@ function showTaskModal(type, taskId) {
                 titleInput.reportValidity();
             } else {
                 const taskObj = getTaskInfoFromModal(taskId);
-                console.log(taskObj)
                 updateTaskList(taskObj);
             }
         };
@@ -906,8 +917,10 @@ function updateTaskList(taskObj) {
 
     if (taskIndex !== -1) {
         tasks[taskIndex] = taskObj;
+        notifyUser("edit");
     } else {
         tasks.push(taskObj);
+        notifyUser("add");
     }
 
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -955,6 +968,7 @@ function deleteTask(taskId) {
         localStorage.setItem("trash", JSON.stringify(trash));
         renderTrash();
         renderNavLinksBadges();
+        notifyUser("delete");
         return;
     }
 
@@ -967,6 +981,7 @@ function deleteTask(taskId) {
     localStorage.setItem("tasks", JSON.stringify(tasks));
     renderTask();
     renderNavLinksBadges();
+    notifyUser("trash");
 }
 
 function clearTrash() {
@@ -974,6 +989,7 @@ function clearTrash() {
     localStorage.setItem("trash", JSON.stringify(trash));
     renderTrash();
     renderNavLinksBadges();
+    notifyUser("clear");
 }
 
 function restoreTask(taskId) {
@@ -987,11 +1003,17 @@ function restoreTask(taskId) {
     localStorage.setItem("tasks", JSON.stringify(tasks));
     renderTrash();
     renderNavLinksBadges();
+    notifyUser("restore");
 }
 
 function toggleStatus(taskId, taskList) {
     const task = taskList.find(task => task.id === taskId)
     task.status = task.status === "Completed" ? "Ongoing" : "Completed";
+    if (task.status === "Completed") {
+        notifyUser("done");
+    } else {
+        notifyUser("undone");
+    }
     localStorage.setItem("tasks", JSON.stringify(tasks));
     localStorage.setItem("trash", JSON.stringify(trash));
     if (selectedNav === "trash-li") {
@@ -1005,6 +1027,11 @@ function toggleStatus(taskId, taskList) {
 function toggleFavorite(taskId, taskList) {
     const task = taskList.find(task => task.id === taskId);
     task.favorite = !task.favorite;
+    if (task.favorite) {
+        notifyUser("favorite");
+    } else {
+        notifyUser("unfavorite");
+    }
     localStorage.setItem("tasks", JSON.stringify(tasks));
     localStorage.setItem("trash", JSON.stringify(trash));
     if (selectedNav === "trash-li") {
@@ -1015,8 +1042,31 @@ function toggleFavorite(taskId, taskList) {
     renderNavLinksBadges();
 }
 
-function notifyUser(taskId, type) {
+function notifyUser(type) {
+    // notificationContainer is declared
     const notificationInfo = notifications.find(notif => notif.name === type);
+
+    let notification = document.createElement('div');
+    notification.innerHTML = `
+        <span><i data-lucide="${notificationInfo.icon}"></i></span>
+        <p>${notificationInfo.message}</p>
+    `;
+    notification.classList.add("notification-card");
+    notification.style.borderLeft = `4px solid ${notificationInfo.color}`;
+    notification.style.color = `${notificationInfo.color}`;
+
+    notificationContainer.appendChild(notification);
+    lucide.createIcons();
+    notification.offsetHeight; 
+    notification.classList.add("show");
+
+    setTimeout(() => {
+        notification.classList.remove("show");
+
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 3000);
 }
 
 function formatDate(date) {
