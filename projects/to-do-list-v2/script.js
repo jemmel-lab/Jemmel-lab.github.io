@@ -262,6 +262,9 @@ const sortDropdownMenu = document.querySelector(".sort-dropdown-menu");
 const sortDropdownMenuBtns = sortDropdownMenu.querySelectorAll("button");
 const ascendingDescendingBtn = document.querySelector(".ascending-descending");
 
+const listDisplayBtn = document.querySelector(".list-display-controls");
+const gridDisplayBtn = document.querySelector(".grid-display-controls");
+
     // ---- Quick Add Task
 const quickAddTaskTitle = document.getElementById("quick-add-task-input");
 const dropdownBtns = document.querySelectorAll(".dropdown-btn");
@@ -286,306 +289,108 @@ const category = categoryBtn.querySelector("span");
 
 const quickAddTaskBtn = document.getElementById("quick-add-task-btn");
 
-
+// Initialization
 renderMain(selectedNav);
 renderNavLinksBadges();
 
+// Core Functions
 
-// Close dropdown menu's
-document.addEventListener("click", (e) => {
-    if (!e.target.closest(".dropdown")) {
-        document.querySelectorAll(".dropdown-menu").forEach(menu => {
-            menu.classList.remove("active");
-        });
+function updateTaskList(taskObj) {
+    const taskIndex = tasks.findIndex(task => task.id === taskObj.id);
+
+    if (taskIndex !== -1) {
+        tasks[taskIndex] = taskObj;
+        notifyUser("edit");
+    } else {
+        tasks.push(taskObj);
+        notifyUser("add");
     }
-    if (!e.target.closest(".sort-by-controls")) {
-        document.querySelector(".sort-dropdown-menu").classList.remove("active");
-    }
-});
 
-navLinks.forEach(navLink => {
-    navLink.addEventListener("click", () => {
-        navLinks.forEach(navLink => {
-            navLink.classList.remove("selected");
-        })
-        navLink.classList.add("selected");
-        selectedNav = navLink.id;
-        currentView = views.find(view => view.name === selectedNav);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    document.getElementById("task-modal").classList.remove("active");
+    renderTask();
+    clearTaskModal();
+    renderNavLinksBadges();
+}
+function deleteTask(taskId) {
 
-        document.getElementById("search-input").value = "";
-        textToSearch = "";
-        renderMain(selectedNav);
-    });
-});
-
-searchForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    textToSearch = searchInput.value;
     if (selectedNav === "trash-li") {
+        const taskIndex = trash.findIndex(task => task.id === taskId);
+        trash.splice(taskIndex, 1);
+        localStorage.setItem("trash", JSON.stringify(trash));
         renderTrash();
-    } else {
-        renderTask();
-    }
-    textToSearch = "";
-});
-
-
-addTaskBtn.addEventListener("click", () => {
-    showTaskModal("add");
-});
-
-dropdownBtns.forEach(dropdownBtn => {
-    dropdownBtn.addEventListener("click", () => {
-
-        allDropdownMenu.forEach(dropdownMenu => {
-            dropdownMenu.classList.remove("active");
-        })
-
-        const dropdownMenu = dropdownBtn.nextElementSibling;
-        dropdownMenu.classList.toggle("active");
-    });
-});
-
-dueDateRadio.forEach(radio => {
-    radio.addEventListener("change", () => {
-        
-        switch(radio.id) {
-            case "no-due-date":
-                dueDate.textContent = "No due Date";
-                dueDateBtn.style.color = "var(--color-text-muted)";
-                selectedDate = "None";
-                break;
-            case "due-date-today":
-                dueDate.textContent = "Today";
-                dueDateBtn.style.color = "var(--color-text)";
-                selectedDate = formattedToday;
-                break;
-            case "due-date-tomorrow":
-                dueDate.textContent = "Tomorrow";
-                dueDateBtn.style.color = "var(--color-text)";
-                selectedDate = formattedTomorrow;
-                break;
-        }
-
-        dueDatePicker.value = "";
-        dueDateDropdownMenu.classList.remove("active");
-    });
-});
-dueDatePicker.addEventListener("change", () => {
-
-    dueDateRadio.forEach(radio => {
-        radio.checked = false;
-    });
-
-    if(!dueDatePicker.value) {
-        dueDate.textContent = "No due date";
-        dueDateBtn.style.color = "var(--color-text-muted)";
-        selectedDate = "None";
-    } else {
-        dueDateBtn.style.color = "var(--color-text)";
-        const [year, month, day] = dueDatePicker.value.split('-');
-        selectedDate = `${month}/${day}/${year}`;
-        dueDate.textContent = selectedDate;
-    }
-
-    dueDateDropdownMenu.classList.remove("active");
-});
-
-priorityDropdownBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-        const spanElement = btn.querySelector("span");
-
-        priority.textContent = spanElement.textContent;
-        selectedPriority = spanElement.textContent;
-
-        switch (spanElement.textContent) {
-            case "High":
-                priorityBtn.style.color = "var(--color-danger)";
-                break;
-            case "Medium":
-                priorityBtn.style.color = "var(--color-warning)";
-                break;
-            case "Low":
-                priorityBtn.style.color = "var(--color-success)";
-                break;
-            case "No priority":
-                priorityBtn.style.color = "var(--color-text-muted)";
-                selectedPriority = "None";
-                break;
-        }
-        priorityDropdownMenu.classList.remove("active");
-    });
-});
-
-// ---- Category
-
-
-categoryDropdownBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-        const spanElement = btn.querySelector("span");
-
-        category.textContent = spanElement.textContent;
-        selectedCategory = spanElement.textContent;
-
-        switch (spanElement.textContent) {
-            case "Work":
-                categoryBtn.style.color = "var(--color-info)";
-                break;
-            case "Personal":
-                categoryBtn.style.color = "var(--color-success)";
-                break;
-            case "Study":
-                categoryBtn.style.color = "var(--color-more-accent)";
-                break;
-            case "Other":
-                categoryBtn.style.color = "var(--color-warning)";
-                break;
-            case "No category":
-                categoryBtn.style.color = "var(--color-text-muted)";
-                selectedCategory = "None";
-                break;
-        }
-        categoryDropdownMenu.classList.remove("active");
-    });
-});
-quickAddTaskBtn.addEventListener("click", () => {
-    if (!quickAddTaskTitle.checkValidity()) {
-        quickAddTaskTitle.reportValidity();
+        renderNavLinksBadges();
+        notifyUser("delete");
         return;
     }
 
-    const newTaskObj = {
-        id: crypto.randomUUID(),
-        title: quickAddTaskTitle.value,
-        description: "None",
-        dueDate: selectedDate,
-        dateAdded: formatDate(new Date()),
-        priority: selectedPriority,
-        category: selectedCategory,
-        favorite: false,
-        status: "Ongoing"
+    const task = tasks.find(task => task.id === taskId);
+    if (!task) return;
+    trash.push(task);
+    localStorage.setItem("trash", JSON.stringify(trash));
+    const taskIndex = tasks.findIndex(task => task.id === taskId);
+    tasks.splice(taskIndex, 1);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    renderTask();
+    renderNavLinksBadges();
+    notifyUser("trash");
+}
+function restoreTask(taskId) {
+
+    const task = trash.find(task => task.id === taskId);
+    if (!task) return;
+    tasks.push(task);
+    const taskIndex = trash.findIndex(task => task.id === taskId);
+    trash.splice(taskIndex, 1);
+    localStorage.setItem("trash", JSON.stringify(trash));
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    renderTrash();
+    renderNavLinksBadges();
+    notifyUser("restore");
+}
+function clearTrash() {
+    trash.length = 0;
+    localStorage.setItem("trash", JSON.stringify(trash));
+    renderTrash();
+    renderNavLinksBadges();
+    notifyUser("clear");
+}
+function toggleStatus(taskId, taskList) {
+    const task = taskList.find(task => task.id === taskId)
+    task.status = task.status === "Completed" ? "Ongoing" : "Completed";
+    if (task.status === "Completed") {
+        notifyUser("done");
+    } else {
+        notifyUser("undone");
     }
-
-    updateTaskList(newTaskObj, "add");
-
-    document.querySelector(".due-date-radio [name='due-date-radio']").checked = true;
-    selectedDate = "None";
-    dueDate.textContent = "Due Date";
-    dueDateBtn.style.color = "var(--color-text-muted)";
-    selectedPriority = "None";
-    priority.textContent = "Priority";
-    priorityBtn.style.color = "var(--color-text-muted)";
-    selectedCategory = "None";
-    category.textContent = "Category";
-    categoryBtn.style.color = "var(--color-text-muted)";
-    quickAddTaskTitle.value = "";
-
-});
-
-// Quick add task ↑ 
-
-// Task list ↓
-
-// ---- Render tasks
-
-taskListUl.addEventListener("click", (e) => {
-    if (e.target.closest(".task")) {
-        const taskElement = e.target.closest(".task");
-        const taskId = taskElement.dataset.id;
-
-        if (e.target.closest(".task-checkbox")) {
-            const taskLi = document.querySelector(`[data-id="${taskId}"] div`);
-            taskLi.classList.toggle("completed");
-            toggleStatus(taskId, tasks);
-        } else if (e.target.closest(".task-favorite-btn")) {
-            const taskLi = document.querySelector(`[data-id="${taskId}"] .task-favorite-btn`);
-            taskLi.classList.toggle("favorite");
-            toggleFavorite(taskId, tasks);
-        } else if (e.target.closest(".delete-btn")) {
-            showConfirmationModal(taskId, "trash");
-        } else {
-            showTaskModal("edit", taskId)
-        }
-    }
-});
-
-trashListUl.addEventListener("click", (e) => {
-    if (e.target.closest(".task")) {
-        const taskElement = e.target.closest(".task");
-        const taskId = taskElement.dataset.id;
-
-        if (e.target.closest(".task-favorite-btn")) {
-            const taskLi = document.querySelector(`[data-id="${taskId}"] .task-favorite-btn`);
-            taskLi.classList.toggle("favorite");
-            toggleFavorite(taskId, trash);
-        } else if (e.target.closest(".delete-btn")) {
-            showConfirmationModal(taskId, "delete permanent");
-        } else if (e.target.closest(".restore-btn")) {
-            restoreTask(taskId);
-        } 
-    } else if (e.target.closest("#clear-trash-btn")) {
-        showConfirmationModal(undefined, "clear");
-    }
-});
-
-statusButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-        statusButtons.forEach(btn => {
-            btn.classList.remove("selected");
-        });
-        btn.classList.add("selected");
-        selectedStatus = btn.textContent.trim();
-        renderTask();
-    });
-});
-sortDropdownBtn.addEventListener("click", () => {
-    sortDropdownMenu.classList.toggle("active");
-});
-
-sortDropdownMenuBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-        const sortBy = btn.querySelector("span").textContent;
-        ascendingDescendingBtn.querySelector("span").textContent = sortBy;
-        sortDropdownMenu.classList.remove("active");
-        ascendingDescendingBtn.querySelector("svg").classList.remove("descending");
-        isListAscending = true;
-        selectedSortingOption = sortBy;
-        currentSort = sortOption.find(sort => sort.name === selectedSortingOption);
-        if (selectedNav === "trash-li") {
-        renderTrash();
-        } else {
-            renderTask();
-        }
-    });
-});
-
-ascendingDescendingBtn.addEventListener("click", () => {
-    const icon = ascendingDescendingBtn.querySelector("svg");
-    icon.classList.toggle("descending");
-    isListAscending = !isListAscending;
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    localStorage.setItem("trash", JSON.stringify(trash));
     if (selectedNav === "trash-li") {
         renderTrash();
     } else {
         renderTask();
     }
-});
+    renderNavLinksBadges();
+}
+function toggleFavorite(taskId, taskList) {
+    const task = taskList.find(task => task.id === taskId);
+    task.favorite = !task.favorite;
+    if (task.favorite) {
+        notifyUser("favorite");
+    } else {
+        notifyUser("unfavorite");
+    }
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    localStorage.setItem("trash", JSON.stringify(trash));
+    if (selectedNav === "trash-li") {
+        renderTrash();
+    } else {
+        renderTask();
+    }
+    renderNavLinksBadges();
+}
 
-const listDisplayBtn = document.querySelector(".list-display-controls");
-const gridDisplayBtn = document.querySelector(".grid-display-controls");
-
-listDisplayBtn.addEventListener("click", () => {
-    listDisplayBtn.classList.add("selected");
-    gridDisplayBtn.classList.remove("selected");
-});
-gridDisplayBtn.addEventListener("click", () => {
-    gridDisplayBtn.classList.add("selected");
-    listDisplayBtn.classList.remove("selected");
-});
-
-// Task list ↑ 
-
-// Functions ↓
-
+// Render Functions
 function renderNavLinksBadges() {
     const allTaskBadge = document.getElementById("all-task-count");
     const todayBadge = document.getElementById("today-count");
@@ -603,7 +408,6 @@ function renderNavLinksBadges() {
     completedBadge.textContent = tasks.filter(task => task.status === "Completed").length;
     trashBadge.textContent = trash.length;
 }
-
 function renderMain(selectedNav) {
     const addTaskBtn = document.getElementById("add-task-btn");
     const quickAddTaskCon = document.querySelector(".quick-add-task-container");
@@ -630,7 +434,6 @@ function renderMain(selectedNav) {
 
     renderNavLinksBadges();
 }
-
 function renderTask() {
     const trashListUl = document.querySelector(".trash-list-ul");
     trashListUl.innerHTML = "";
@@ -691,7 +494,6 @@ function renderTask() {
     renderNavLinksBadges();
     lucide.createIcons();
 };
-
 function renderTrash() {
     const taskListUl = document.querySelector(".task-list-ul");
     taskListUl.innerHTML = "";
@@ -755,15 +557,282 @@ function renderTrash() {
     lucide.createIcons();
 }
 
-function clearTaskModal() {
-    const modal = document.querySelector(".modal-content");
-    modal.querySelector("#task-title-input").value = "";
-    modal.querySelector("#task-description-input").value = "";
-    modal.querySelector("#task-due-date-input").value = "";
-    modal.querySelector('input[name="priority-radio"][value="None"]').checked = true;
-    modal.querySelector('input[name="category-radio"][value="None"]').checked = true;
-}
+// Event Listeners
 
+    // ---- Close dropdown menu's
+document.addEventListener("click", (e) => {
+    if (!e.target.closest(".dropdown")) {
+        document.querySelectorAll(".dropdown-menu").forEach(menu => {
+            menu.classList.remove("active");
+        });
+    }
+    if (!e.target.closest(".sort-by-controls")) {
+        document.querySelector(".sort-dropdown-menu").classList.remove("active");
+    }
+});
+
+navLinks.forEach(navLink => {
+    navLink.addEventListener("click", () => {
+        navLinks.forEach(navLink => {
+            navLink.classList.remove("selected");
+        })
+        navLink.classList.add("selected");
+        selectedNav = navLink.id;
+        currentView = views.find(view => view.name === selectedNav);
+
+        document.getElementById("search-input").value = "";
+        textToSearch = "";
+        renderMain(selectedNav);
+    });
+});
+
+searchForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    textToSearch = searchInput.value;
+    if (selectedNav === "trash-li") {
+        renderTrash();
+    } else {
+        renderTask();
+    }
+    textToSearch = "";
+});
+
+
+addTaskBtn.addEventListener("click", () => {
+    showTaskModal("add");
+});
+
+dropdownBtns.forEach(dropdownBtn => {
+    dropdownBtn.addEventListener("click", () => {
+
+        allDropdownMenu.forEach(dropdownMenu => {
+            dropdownMenu.classList.remove("active");
+        })
+
+        const dropdownMenu = dropdownBtn.nextElementSibling;
+        dropdownMenu.classList.toggle("active");
+    });
+});
+dueDateRadio.forEach(radio => {
+    radio.addEventListener("change", () => {
+        
+        switch(radio.id) {
+            case "no-due-date":
+                dueDate.textContent = "No due Date";
+                dueDateBtn.style.color = "var(--color-text-muted)";
+                selectedDate = "None";
+                break;
+            case "due-date-today":
+                dueDate.textContent = "Today";
+                dueDateBtn.style.color = "var(--color-text)";
+                selectedDate = formattedToday;
+                break;
+            case "due-date-tomorrow":
+                dueDate.textContent = "Tomorrow";
+                dueDateBtn.style.color = "var(--color-text)";
+                selectedDate = formattedTomorrow;
+                break;
+        }
+
+        dueDatePicker.value = "";
+        dueDateDropdownMenu.classList.remove("active");
+    });
+});
+dueDatePicker.addEventListener("change", () => {
+
+    dueDateRadio.forEach(radio => {
+        radio.checked = false;
+    });
+
+    if(!dueDatePicker.value) {
+        dueDate.textContent = "No due date";
+        dueDateBtn.style.color = "var(--color-text-muted)";
+        selectedDate = "None";
+    } else {
+        dueDateBtn.style.color = "var(--color-text)";
+        const [year, month, day] = dueDatePicker.value.split('-');
+        selectedDate = `${month}/${day}/${year}`;
+        dueDate.textContent = selectedDate;
+    }
+
+    dueDateDropdownMenu.classList.remove("active");
+});
+priorityDropdownBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+        const spanElement = btn.querySelector("span");
+
+        priority.textContent = spanElement.textContent;
+        selectedPriority = spanElement.textContent;
+
+        switch (spanElement.textContent) {
+            case "High":
+                priorityBtn.style.color = "var(--color-danger)";
+                break;
+            case "Medium":
+                priorityBtn.style.color = "var(--color-warning)";
+                break;
+            case "Low":
+                priorityBtn.style.color = "var(--color-success)";
+                break;
+            case "No priority":
+                priorityBtn.style.color = "var(--color-text-muted)";
+                selectedPriority = "None";
+                break;
+        }
+        priorityDropdownMenu.classList.remove("active");
+    });
+});
+categoryDropdownBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+        const spanElement = btn.querySelector("span");
+
+        category.textContent = spanElement.textContent;
+        selectedCategory = spanElement.textContent;
+
+        switch (spanElement.textContent) {
+            case "Work":
+                categoryBtn.style.color = "var(--color-info)";
+                break;
+            case "Personal":
+                categoryBtn.style.color = "var(--color-success)";
+                break;
+            case "Study":
+                categoryBtn.style.color = "var(--color-more-accent)";
+                break;
+            case "Other":
+                categoryBtn.style.color = "var(--color-warning)";
+                break;
+            case "No category":
+                categoryBtn.style.color = "var(--color-text-muted)";
+                selectedCategory = "None";
+                break;
+        }
+        categoryDropdownMenu.classList.remove("active");
+    });
+});
+quickAddTaskBtn.addEventListener("click", () => {
+    if (!quickAddTaskTitle.checkValidity()) {
+        quickAddTaskTitle.reportValidity();
+        return;
+    }
+
+    const newTaskObj = {
+        id: crypto.randomUUID(),
+        title: quickAddTaskTitle.value,
+        description: "None",
+        dueDate: selectedDate,
+        dateAdded: formatDate(new Date()),
+        priority: selectedPriority,
+        category: selectedCategory,
+        favorite: false,
+        status: "Ongoing"
+    }
+
+    updateTaskList(newTaskObj, "add");
+
+    document.querySelector(".due-date-radio [name='due-date-radio']").checked = true;
+    selectedDate = "None";
+    dueDate.textContent = "Due Date";
+    dueDateBtn.style.color = "var(--color-text-muted)";
+    selectedPriority = "None";
+    priority.textContent = "Priority";
+    priorityBtn.style.color = "var(--color-text-muted)";
+    selectedCategory = "None";
+    category.textContent = "Category";
+    categoryBtn.style.color = "var(--color-text-muted)";
+    quickAddTaskTitle.value = "";
+});
+
+taskListUl.addEventListener("click", (e) => {
+    if (e.target.closest(".task")) {
+        const taskElement = e.target.closest(".task");
+        const taskId = taskElement.dataset.id;
+
+        if (e.target.closest(".task-checkbox")) {
+            const taskLi = document.querySelector(`[data-id="${taskId}"] div`);
+            taskLi.classList.toggle("completed");
+            toggleStatus(taskId, tasks);
+        } else if (e.target.closest(".task-favorite-btn")) {
+            const taskLi = document.querySelector(`[data-id="${taskId}"] .task-favorite-btn`);
+            taskLi.classList.toggle("favorite");
+            toggleFavorite(taskId, tasks);
+        } else if (e.target.closest(".delete-btn")) {
+            showConfirmationModal(taskId, "trash");
+        } else {
+            showTaskModal("edit", taskId)
+        }
+    }
+});
+
+trashListUl.addEventListener("click", (e) => {
+    if (e.target.closest(".task")) {
+        const taskElement = e.target.closest(".task");
+        const taskId = taskElement.dataset.id;
+
+        if (e.target.closest(".task-favorite-btn")) {
+            const taskLi = document.querySelector(`[data-id="${taskId}"] .task-favorite-btn`);
+            taskLi.classList.toggle("favorite");
+            toggleFavorite(taskId, trash);
+        } else if (e.target.closest(".delete-btn")) {
+            showConfirmationModal(taskId, "delete permanent");
+        } else if (e.target.closest(".restore-btn")) {
+            restoreTask(taskId);
+        } 
+    } else if (e.target.closest("#clear-trash-btn")) {
+        showConfirmationModal(undefined, "clear");
+    }
+});
+
+statusButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        statusButtons.forEach(btn => {
+            btn.classList.remove("selected");
+        });
+        btn.classList.add("selected");
+        selectedStatus = btn.textContent.trim();
+        renderTask();
+    });
+});
+sortDropdownBtn.addEventListener("click", () => {
+    sortDropdownMenu.classList.toggle("active");
+});
+sortDropdownMenuBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+        const sortBy = btn.querySelector("span").textContent;
+        ascendingDescendingBtn.querySelector("span").textContent = sortBy;
+        sortDropdownMenu.classList.remove("active");
+        ascendingDescendingBtn.querySelector("svg").classList.remove("descending");
+        isListAscending = true;
+        selectedSortingOption = sortBy;
+        currentSort = sortOption.find(sort => sort.name === selectedSortingOption);
+        if (selectedNav === "trash-li") {
+        renderTrash();
+        } else {
+            renderTask();
+        }
+    });
+});
+ascendingDescendingBtn.addEventListener("click", () => {
+    const icon = ascendingDescendingBtn.querySelector("svg");
+    icon.classList.toggle("descending");
+    isListAscending = !isListAscending;
+    if (selectedNav === "trash-li") {
+        renderTrash();
+    } else {
+        renderTask();
+    }
+});
+listDisplayBtn.addEventListener("click", () => {
+    listDisplayBtn.classList.add("selected");
+    gridDisplayBtn.classList.remove("selected");
+});
+gridDisplayBtn.addEventListener("click", () => {
+    gridDisplayBtn.classList.add("selected");
+    listDisplayBtn.classList.remove("selected");
+});
+
+
+// Utilities
 function showTaskModal(type, taskId) {
     document.getElementById("task-modal").classList.add("active");
     const modal = document.querySelector(".modal-content");
@@ -835,7 +904,43 @@ function showTaskModal(type, taskId) {
         };
     }
 }
+function getTaskInfoFromModal(taskId) {
+    const modal = document.querySelector(".modal-content");
+    const title = modal.querySelector("#task-title-input");
+    const description = modal.querySelector("#task-description-input");
 
+    const dateInput = modal.querySelector("#task-due-date-input");
+    const [year, month, day] = dateInput.value.split('-');
+    const dueDate = dateInput.value
+        ? `${month}/${day}/${year}`
+        : "None";
+
+    const priority = modal.querySelector('input[name="priority-radio"]:checked');
+    const category = modal.querySelector('input[name="category-radio"]:checked');
+
+    const status = tasks.find(task => task.id === taskId)?.status || "Ongoing";
+    const favorite = tasks.find(task => task.id === taskId)?.favorite || false;
+
+    return {
+        id: taskId || crypto.randomUUID(),
+        title: title.value,
+        description: description.value,
+        dueDate: dueDate,
+        dateAdded: tasks.find(task => task.id === taskId)?.dateAdded || formatDate(new Date()),
+        priority: priority.value,
+        category: category.value,
+        favorite: favorite,
+        status: status
+    }
+}
+function clearTaskModal() {
+    const modal = document.querySelector(".modal-content");
+    modal.querySelector("#task-title-input").value = "";
+    modal.querySelector("#task-description-input").value = "";
+    modal.querySelector("#task-due-date-input").value = "";
+    modal.querySelector('input[name="priority-radio"][value="None"]').checked = true;
+    modal.querySelector('input[name="category-radio"][value="None"]').checked = true;
+}
 function showConfirmationModal(taskId, type) {
     const modal = document.getElementById("confirmation-modal");
     modal.classList.add("active");
@@ -879,136 +984,6 @@ function showConfirmationModal(taskId, type) {
     }
 }
 
-function updateTaskList(taskObj) {
-    const taskIndex = tasks.findIndex(task => task.id === taskObj.id);
-
-    if (taskIndex !== -1) {
-        tasks[taskIndex] = taskObj;
-        notifyUser("edit");
-    } else {
-        tasks.push(taskObj);
-        notifyUser("add");
-    }
-
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-    document.getElementById("task-modal").classList.remove("active");
-    renderTask();
-    clearTaskModal();
-    renderNavLinksBadges();
-}
-
-function getTaskInfoFromModal(taskId) {
-    const modal = document.querySelector(".modal-content");
-    const title = modal.querySelector("#task-title-input");
-    const description = modal.querySelector("#task-description-input");
-
-    const dateInput = modal.querySelector("#task-due-date-input");
-    const [year, month, day] = dateInput.value.split('-');
-    const dueDate = dateInput.value
-        ? `${month}/${day}/${year}`
-        : "None";
-
-    const priority = modal.querySelector('input[name="priority-radio"]:checked');
-    const category = modal.querySelector('input[name="category-radio"]:checked');
-
-    const status = tasks.find(task => task.id === taskId)?.status || "Ongoing";
-    const favorite = tasks.find(task => task.id === taskId)?.favorite || false;
-
-    return {
-        id: taskId || crypto.randomUUID(),
-        title: title.value,
-        description: description.value,
-        dueDate: dueDate,
-        dateAdded: tasks.find(task => task.id === taskId)?.dateAdded || formatDate(new Date()),
-        priority: priority.value,
-        category: category.value,
-        favorite: favorite,
-        status: status
-    }
-}
-
-function deleteTask(taskId) {
-
-    if (selectedNav === "trash-li") {
-        const taskIndex = trash.findIndex(task => task.id === taskId);
-        trash.splice(taskIndex, 1);
-        localStorage.setItem("trash", JSON.stringify(trash));
-        renderTrash();
-        renderNavLinksBadges();
-        notifyUser("delete");
-        return;
-    }
-
-    const task = tasks.find(task => task.id === taskId);
-    if (!task) return;
-    trash.push(task);
-    localStorage.setItem("trash", JSON.stringify(trash));
-    const taskIndex = tasks.findIndex(task => task.id === taskId);
-    tasks.splice(taskIndex, 1);
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-    renderTask();
-    renderNavLinksBadges();
-    notifyUser("trash");
-}
-
-function clearTrash() {
-    trash.length = 0;
-    localStorage.setItem("trash", JSON.stringify(trash));
-    renderTrash();
-    renderNavLinksBadges();
-    notifyUser("clear");
-}
-
-function restoreTask(taskId) {
-
-    const task = trash.find(task => task.id === taskId);
-    if (!task) return;
-    tasks.push(task);
-    const taskIndex = trash.findIndex(task => task.id === taskId);
-    trash.splice(taskIndex, 1);
-    localStorage.setItem("trash", JSON.stringify(trash));
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-    renderTrash();
-    renderNavLinksBadges();
-    notifyUser("restore");
-}
-
-function toggleStatus(taskId, taskList) {
-    const task = taskList.find(task => task.id === taskId)
-    task.status = task.status === "Completed" ? "Ongoing" : "Completed";
-    if (task.status === "Completed") {
-        notifyUser("done");
-    } else {
-        notifyUser("undone");
-    }
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-    localStorage.setItem("trash", JSON.stringify(trash));
-    if (selectedNav === "trash-li") {
-        renderTrash();
-    } else {
-        renderTask();
-    }
-    renderNavLinksBadges();
-}
-
-function toggleFavorite(taskId, taskList) {
-    const task = taskList.find(task => task.id === taskId);
-    task.favorite = !task.favorite;
-    if (task.favorite) {
-        notifyUser("favorite");
-    } else {
-        notifyUser("unfavorite");
-    }
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-    localStorage.setItem("trash", JSON.stringify(trash));
-    if (selectedNav === "trash-li") {
-        renderTrash();
-    } else {
-        renderTask();
-    }
-    renderNavLinksBadges();
-}
-
 function notifyUser(type) {
     // notificationContainer is declared
     const notificationInfo = notifications.find(notif => notif.name === type);
@@ -1043,5 +1018,3 @@ function formatDate(date) {
 
     return `${month}/${day}/${year}`;
 }
-
-// Functions ↑
