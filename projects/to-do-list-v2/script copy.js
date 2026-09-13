@@ -1,7 +1,9 @@
+lucide.createIcons();
+
 // Notes:
 
-    // Clear all tasks: localStorage.removeItem("tasks");
-    // localStorage.setItem("tasks", JSON.stringify(tasks));
+    // Clear all tasks: 
+    // localStorage.removeItem("tasks");
     // Task sample : const newTaskObj = {
                     //     id: crypto.randomUUID(),
                     //     title: title.value,
@@ -14,7 +16,34 @@
                     //     status: "Ongoing"
                     // }
 
-// State
+// Initialize list storage
+
+const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+const trash = JSON.parse(localStorage.getItem("trash")) || [];
+    // localStorage.setItem("tasks", JSON.stringify(tasks));
+
+// Close dropdown menu's
+document.addEventListener("click", (e) => {
+    if (!e.target.closest(".dropdown")) {
+        document.querySelectorAll(".dropdown-menu").forEach(menu => {
+            menu.classList.remove("active");
+        });
+    }
+    if (!e.target.closest(".sort-by-controls")) {
+        document.querySelector(".sort-dropdown-menu").classList.remove("active");
+    }
+});
+// Setting Dates ↓
+
+const today = new Date();
+const tomorrow = new Date(today);
+tomorrow.setDate(tomorrow.getDate() + 1);
+const formattedToday = formatDate(today);
+const formattedTomorrow = formatDate(tomorrow);
+
+// Setting Dates ↑
+
+// Confirmation Modal ↓
 
 const confirmationModal = [
     {
@@ -74,6 +103,12 @@ const confirmationModal = [
         }
     }
 ];
+
+// Confirmation Modal ↑
+
+// Navigation and Main ↓
+
+let textToSearch = "";
 const views = [
     {
         name: "all-task-li",
@@ -106,6 +141,7 @@ const views = [
         filter: task => true,
     }
 ];
+
 const sortOption = [
     {
         name: "Due Date",
@@ -154,6 +190,43 @@ const sortOption = [
         }
     }
 ];
+
+const navLinks = document.querySelectorAll(".nav-link");
+let selectedNav = "all-task-li";
+let currentView = views.find(view => view.name === selectedNav);
+
+// For status select when in all-task-li(All Task)
+let selectedStatus = "All";
+// For sorting via selected option\
+let selectedSortingOption = "Due Date";
+let currentSort = sortOption.find(sort => sort.name === selectedSortingOption);
+// For Ascending and Descending order of task
+let isListAscending = true;
+
+renderMain(selectedNav);
+renderNavLinksBadges();
+
+navLinks.forEach(navLink => {
+    navLink.addEventListener("click", () => {
+        navLinks.forEach(navLink => {
+            navLink.classList.remove("selected");
+        })
+        navLink.classList.add("selected");
+        selectedNav = navLink.id;
+        currentView = views.find(view => view.name === selectedNav);
+
+        document.getElementById("search-input").value = "";
+        textToSearch = "";
+        renderMain(selectedNav);
+    });
+});
+
+// Navigation and Main ↑
+
+
+// Notification ↓
+
+let notificationContainer = document.querySelector(".notifications");
 const notifications = [
 
     {
@@ -219,104 +292,13 @@ const notifications = [
 
 ];
 
+// Notofication ↑
 
-// Data
+// Search ↓
 
-    // ---- Initialize list storage
-const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-const trash = JSON.parse(localStorage.getItem("trash")) || [];
-    
-    // ---- Setting Dates
-const today = new Date();
-const tomorrow = new Date(today);
-tomorrow.setDate(tomorrow.getDate() + 1);
-const formattedToday = formatDate(today);
-const formattedTomorrow = formatDate(tomorrow);
-
-    // ---- Others
-let textToSearch = "";
-let selectedNav = "all-task-li";
-let selectedSortingOption = "Due Date";
-let currentView = views.find(view => view.name === selectedNav);
-let currentSort = sortOption.find(sort => sort.name === selectedSortingOption);
-let selectedStatus = "All";
-let isListAscending = true;
-let selectedDate = "None";
-let selectedPriority = "None";
-let selectedCategory = "None";
-
-// DOM References
-
-const navLinks = document.querySelectorAll(".nav-link");
-let notificationContainer = document.querySelector(".notifications");
 const searchForm = document.getElementById("search-form");
 const searchInput = document.getElementById("search-input");
 const searchBtn = document.getElementById("search-btn");
-const addTaskBtn = document.getElementById("add-task-btn");
-
-const taskListUl = document.querySelector(".task-list-ul");
-const trashListUl = document.querySelector(".trash-list-ul");
-
-const sortDropdownBtn = document.querySelector(".sort-dropdown-btn");
-const sortDropdownMenu = document.querySelector(".sort-dropdown-menu");
-const sortDropdownMenuBtns = sortDropdownMenu.querySelectorAll("button");
-const ascendingDescendingBtn = document.querySelector(".ascending-descending");
-
-    // ---- Quick Add Task
-const quickAddTaskTitle = document.getElementById("quick-add-task-input");
-const dropdownBtns = document.querySelectorAll(".dropdown-btn");
-const allDropdownMenu = document.querySelectorAll(".dropdown-menu");
-
-const dueDateDropdownMenu = document.getElementById("due-date-dropdown-menu");
-const dueDateBtn = document.querySelector("#due-date-dropdown-btn");
-const dueDate = dueDateBtn.querySelector("span");
-const dueDateRadio = document.querySelectorAll(".due-date-radio [name='due-date-radio']");
-const dueDatePicker = document.getElementById("due-date-picker");
-
-const priorityDropdownMenu = document.getElementById("priority-dropdown-menu");
-const priorityDropdownBtns = document.querySelectorAll("#priority-dropdown-menu button");
-const priorityBtn = document.querySelector("#priority-dropdown-btn");
-const priority = priorityBtn.querySelector("span");
-
-const statusButtons = document.querySelectorAll(".status-controls button");
-const categoryDropdownMenu = document.getElementById("category-dropdown-menu");
-const categoryDropdownBtns = document.querySelectorAll("#category-dropdown-menu button");
-const categoryBtn = document.querySelector("#category-dropdown-btn");
-const category = categoryBtn.querySelector("span");
-
-const quickAddTaskBtn = document.getElementById("quick-add-task-btn");
-
-
-renderMain(selectedNav);
-renderNavLinksBadges();
-
-
-// Close dropdown menu's
-document.addEventListener("click", (e) => {
-    if (!e.target.closest(".dropdown")) {
-        document.querySelectorAll(".dropdown-menu").forEach(menu => {
-            menu.classList.remove("active");
-        });
-    }
-    if (!e.target.closest(".sort-by-controls")) {
-        document.querySelector(".sort-dropdown-menu").classList.remove("active");
-    }
-});
-
-navLinks.forEach(navLink => {
-    navLink.addEventListener("click", () => {
-        navLinks.forEach(navLink => {
-            navLink.classList.remove("selected");
-        })
-        navLink.classList.add("selected");
-        selectedNav = navLink.id;
-        currentView = views.find(view => view.name === selectedNav);
-
-        document.getElementById("search-input").value = "";
-        textToSearch = "";
-        renderMain(selectedNav);
-    });
-});
 
 searchForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -329,10 +311,23 @@ searchForm.addEventListener("submit", (e) => {
     textToSearch = "";
 });
 
+// Search ↑
+
+// Add task ↓
+
+const addTaskBtn = document.getElementById("add-task-btn");
 
 addTaskBtn.addEventListener("click", () => {
     showTaskModal("add");
 });
+
+// Add task ↑
+
+// Quick add task ↓
+
+const quickAddTaskTitle = document.getElementById("quick-add-task-input");
+const dropdownBtns = document.querySelectorAll(".dropdown-btn");
+const allDropdownMenu = document.querySelectorAll(".dropdown-menu");
 
 dropdownBtns.forEach(dropdownBtn => {
     dropdownBtn.addEventListener("click", () => {
@@ -345,6 +340,15 @@ dropdownBtns.forEach(dropdownBtn => {
         dropdownMenu.classList.toggle("active");
     });
 });
+
+// ---- Due Date
+const dueDateDropdownMenu = document.getElementById("due-date-dropdown-menu");
+const dueDateBtn = document.querySelector("#due-date-dropdown-btn");
+const dueDate = dueDateBtn.querySelector("span");
+const dueDateRadio = document.querySelectorAll(".due-date-radio [name='due-date-radio']");
+const dueDatePicker = document.getElementById("due-date-picker");
+
+let selectedDate = "None";
 
 dueDateRadio.forEach(radio => {
     radio.addEventListener("change", () => {
@@ -391,6 +395,13 @@ dueDatePicker.addEventListener("change", () => {
     dueDateDropdownMenu.classList.remove("active");
 });
 
+// ---- Priority
+const priorityDropdownMenu = document.getElementById("priority-dropdown-menu");
+const priorityDropdownBtns = document.querySelectorAll("#priority-dropdown-menu button");
+const priorityBtn = document.querySelector("#priority-dropdown-btn");
+const priority = priorityBtn.querySelector("span");
+let selectedPriority = "None";
+
 priorityDropdownBtns.forEach(btn => {
     btn.addEventListener("click", () => {
         const spanElement = btn.querySelector("span");
@@ -418,7 +429,11 @@ priorityDropdownBtns.forEach(btn => {
 });
 
 // ---- Category
-
+const categoryDropdownMenu = document.getElementById("category-dropdown-menu");
+const categoryDropdownBtns = document.querySelectorAll("#category-dropdown-menu button");
+const categoryBtn = document.querySelector("#category-dropdown-btn");
+const category = categoryBtn.querySelector("span");
+let selectedCategory = "None";
 
 categoryDropdownBtns.forEach(btn => {
     btn.addEventListener("click", () => {
@@ -448,6 +463,8 @@ categoryDropdownBtns.forEach(btn => {
         categoryDropdownMenu.classList.remove("active");
     });
 });
+
+const quickAddTaskBtn = document.getElementById("quick-add-task-btn");
 quickAddTaskBtn.addEventListener("click", () => {
     if (!quickAddTaskTitle.checkValidity()) {
         quickAddTaskTitle.reportValidity();
@@ -466,7 +483,11 @@ quickAddTaskBtn.addEventListener("click", () => {
         status: "Ongoing"
     }
 
-    updateTaskList(newTaskObj, "add");
+    tasks.push(newTaskObj);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    document.getElementById("task-modal").classList.remove("active");
+    renderTask();
+    notifyUser("add");
 
     document.querySelector(".due-date-radio [name='due-date-radio']").checked = true;
     selectedDate = "None";
@@ -480,13 +501,14 @@ quickAddTaskBtn.addEventListener("click", () => {
     categoryBtn.style.color = "var(--color-text-muted)";
     quickAddTaskTitle.value = "";
 
-});
+})
 
 // Quick add task ↑ 
 
 // Task list ↓
 
 // ---- Render tasks
+const taskListUl = document.querySelector(".task-list-ul");
 
 taskListUl.addEventListener("click", (e) => {
     if (e.target.closest(".task")) {
@@ -509,6 +531,8 @@ taskListUl.addEventListener("click", (e) => {
     }
 });
 
+const trashListUl = document.querySelector(".trash-list-ul");
+
 trashListUl.addEventListener("click", (e) => {
     if (e.target.closest(".task")) {
         const taskElement = e.target.closest(".task");
@@ -528,6 +552,9 @@ trashListUl.addEventListener("click", (e) => {
     }
 });
 
+// ---- Task list controls
+const statusButtons = document.querySelectorAll(".status-controls button");
+
 statusButtons.forEach(btn => {
     btn.addEventListener("click", () => {
         statusButtons.forEach(btn => {
@@ -538,6 +565,12 @@ statusButtons.forEach(btn => {
         renderTask();
     });
 });
+
+const sortDropdownBtn = document.querySelector(".sort-dropdown-btn");
+const sortDropdownMenu = document.querySelector(".sort-dropdown-menu");
+const sortDropdownMenuBtns = sortDropdownMenu.querySelectorAll("button");
+const ascendingDescendingBtn = document.querySelector(".ascending-descending");
+
 sortDropdownBtn.addEventListener("click", () => {
     sortDropdownMenu.classList.toggle("active");
 });
